@@ -14,8 +14,8 @@ class Transformer(nn.Module):
         self.norm = nn.LayerNorm(dim)
         for _ in range(depth):
             self.layers.append(nn.ModuleList([
-                PreNorm(dim, Attention(dim, heads = heads, dim_head = dim_head, dropout = dropout)),
-                PreNorm(dim, FeedForward(dim, mlp_dim, dropout = dropout))
+                PreNorm(dim, Attention(dim, heads = heads, dim_head = dim_head, dropout = 0)), #dropout
+                PreNorm(dim, FeedForward(dim, mlp_dim, dropout = 0)) #dropout
             ]))
 
     def forward(self, x): #[b*t n+1 d]
@@ -27,7 +27,7 @@ class Transformer(nn.Module):
 
   
 class ViViT(nn.Module):
-    def __init__(self, image_size, patch_size, num_frames, num_actor_class, dim = 388, depth = 4, heads = 3, pool = 'mean', in_channels = 3, dim_head = 128, dropout = 0.,
+    def __init__(self, image_size, patch_size, num_frames, num_actor_class, dim = 388, depth = 4, heads = 3, pool = 'cls', in_channels = 3, dim_head = 128, dropout = 0.,
                  emb_dropout = 0., scale_dim = 4, ):
         super().__init__()
         
@@ -43,17 +43,17 @@ class ViViT(nn.Module):
 
         self.pos_embedding = nn.Parameter(torch.randn(1, num_frames, num_patches + 1, dim))
         self.space_token = nn.Parameter(torch.randn(1, 1, dim))
-        self.space_transformer = Transformer(dim, depth, heads, dim_head, dim*scale_dim, dropout)
+        self.space_transformer = Transformer(dim, depth, heads, dim_head, dim*scale_dim, 0) #last item dropout
 
         self.temporal_token = nn.Parameter(torch.randn(1, 1, dim))
-        self.temporal_transformer = Transformer(dim, depth, heads, dim_head, dim*scale_dim, dropout)
+        self.temporal_transformer = Transformer(dim, depth, heads, dim_head, dim*scale_dim, 0) #last item dropout
 
-        self.dropout = nn.Dropout(emb_dropout)
+        # self.dropout = nn.Dropout(emb_dropout)
         self.pool = pool
 
         self.mlp_head = nn.Sequential(
             nn.LayerNorm(dim),
-            # nn.Linear(dim, num_classes)
+            # nn.Linear(dim, dim)
         )
         self.head = Head(dim, num_actor_class)
 
@@ -71,7 +71,7 @@ class ViViT(nn.Module):
         cls_space_tokens = repeat(self.space_token, '() n d -> b t n d', b = b, t=t)
         x = torch.cat((cls_space_tokens, x), dim=2)
         x += self.pos_embedding[:, :, :(n + 1)]
-        x = self.dropout(x)
+        # x = self.dropout(x)
 
 
         x = rearrange(x, 'b t n d -> (b t) n d')
@@ -94,18 +94,18 @@ class ViViT(nn.Module):
     
     
 
-if __name__ == "__main__":
+# if __name__ == "__main__":
     
-    img = torch.ones([1, 16, 3, 224, 224]).cuda()
+#     img = torch.ones([1, 16, 3, 224, 224]).cuda()
     
-    model = ViViT(224, 16, 100, 16).cuda()
-    parameters = filter(lambda p: p.requires_grad, model.parameters())
-    parameters = sum([np.prod(p.size()) for p in parameters]) / 1_000_000
-    print('Trainable Parameters: %.3fM' % parameters)
+#     model = ViViT(224, 16, 100, 16).cuda()
+#     parameters = filter(lambda p: p.requires_grad, model.parameters())
+#     parameters = sum([np.prod(p.size()) for p in parameters]) / 1_000_000
+#     print('Trainable Parameters: %.3fM' % parameters)
     
-    out = model(img)
+#     out = model(img)
     
-    print("Shape of out :", out.shape)      # [B, num_classes]
+#     print("Shape of out :", out.shape)      # [B, num_classes]
 
     
     

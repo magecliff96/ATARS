@@ -73,11 +73,11 @@ class ActionSlotLoss(nn.Module):
 
             action_attn = attn[:, :, :self.num_actor_class, :, :]
 
-            if self.args.vehicle_bg:
-                bg_attn, _ = torch.max(attn[:, ::self.args.mask_every_frame, :24, :, :], dim=2)
-                #bg_attn = torch.sum(attn[:, ::self.args.mask_every_frame, :24, :, :], dim=2)
-            else:
-                bg_attn = attn[:, ::self.args.mask_every_frame, -1, :, :].reshape(b, -1, h, w) 
+            # if self.args.vehicle_bg:
+            #     bg_attn, _ = torch.max(attn[:, ::self.args.mask_every_frame, :24, :, :], dim=2)
+            #     #bg_attn = torch.sum(attn[:, ::self.args.mask_every_frame, :24, :, :], dim=2)
+            # else:
+            bg_attn = attn[:, ::self.args.mask_every_frame, -1, :, :].reshape(b, -1, h, w) 
 
             class_idx = label['actor'] == 0.0
             class_idx = class_idx.view(b, self.num_actor_class, 1, 1, 1).repeat(1, 1, l, h, w)

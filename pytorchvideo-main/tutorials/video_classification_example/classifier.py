@@ -1,6 +1,6 @@
 import torch
 import torch.nn as nn
-
+import time
 class Head(nn.Module):
 	def __init__(self, in_channel, num_actor_classes):
 		super(Head, self).__init__()

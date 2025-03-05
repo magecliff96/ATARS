@@ -44,6 +44,64 @@ class SlotAttention(nn.Module):
 
         slots = slots.contiguous()
         self.register_buffer("slots", slots)
+
+
+        #transformer edits
+        #[0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0]
+        self.action_embedding = [
+            #C:
+            [1,0,0,1,0, 1,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0],#0
+            [1,0,0,1,0, 0,1,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0],
+            [1,0,0,1,0, 0,0,1,0,0, 0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0],#2
+            [1,0,0,1,0, 0,0,0,1,0, 0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0],
+            [1,0,0,1,0, 0,0,0,0,1, 0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0],#4
+            [1,0,0,1,0, 0,0,0,0,0, 1,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0],
+            [1,0,0,1,0, 0,0,0,0,0, 0,1,0,0,0, 0,0,0,0,0, 0,0,0,0,0],#6
+            [1,0,0,1,0, 0,0,0,0,0, 0,0,1,0,0, 0,0,0,0,0, 0,0,0,0,0],
+            [1,0,0,1,0, 0,0,0,0,0, 0,0,0,1,0, 0,0,0,0,0, 0,0,0,0,0],#8
+            [1,0,0,1,0, 0,0,0,0,0, 0,0,0,0,1, 0,0,0,0,0, 0,0,0,0,0],
+            [1,0,0,1,0, 0,0,0,0,0, 0,0,0,0,0, 1,0,0,0,0, 0,0,0,0,0],#10
+            [1,0,0,1,0, 0,0,0,0,0, 0,0,0,0,0, 0,1,0,0,0, 0,0,0,0,0],##11
+            #C+:
+            [1,0,0,0,1, 1,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0],#12
+            [1,0,0,0,1, 0,1,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0],
+            [1,0,0,0,1, 0,0,1,0,0, 0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0],#14
+            [1,0,0,0,1, 0,0,0,1,0, 0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0],
+            [1,0,0,0,1, 0,0,0,0,1, 0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0],#16
+            [1,0,0,0,1, 0,0,0,0,0, 1,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0],
+            [1,0,0,0,1, 0,0,0,0,0, 0,1,0,0,0, 0,0,0,0,0, 0,0,0,0,0],#18
+            [1,0,0,0,1, 0,0,0,0,0, 0,0,1,0,0, 0,0,0,0,0, 0,0,0,0,0],
+            [1,0,0,0,1, 0,0,0,0,0, 0,0,0,1,0, 0,0,0,0,0, 0,0,0,0,0],#20
+            [1,0,0,0,1, 0,0,0,0,0, 0,0,0,0,1, 0,0,0,0,0, 0,0,0,0,0],
+            [1,0,0,0,1, 0,0,0,0,0, 0,0,0,0,0, 1,0,0,0,0, 0,0,0,0,0],#22
+            [1,0,0,0,1, 0,0,0,0,0, 0,0,0,0,0, 0,1,0,0,0, 0,0,0,0,0],##23
+            #P
+            [0,0,1,1,0, 0,0,0,0,0, 0,0,0,0,0, 0,0,1,0,0, 0,0,0,0,0],#24
+            [0,0,1,1,0, 0,0,0,0,0, 0,0,0,0,0, 0,0,0,1,0, 0,0,0,0,0],
+            [0,0,1,1,0, 0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,1, 0,0,0,0,0],#26
+            [0,0,1,1,0, 0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 1,0,0,0,0],
+            [0,0,1,1,0, 0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0,1,0,0,0],#28
+            [0,0,1,1,0, 0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0,0,1,0,0],
+            [0,0,1,1,0, 0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0,0,0,1,0],#30
+            [0,0,1,1,0, 0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,1],##31
+            #P+
+            [0,0,1,0,1, 0,0,0,0,0, 0,0,0,0,0, 0,0,1,0,0, 0,0,0,0,0],#32
+            [0,0,1,0,1, 0,0,0,0,0, 0,0,0,0,0, 0,0,0,1,0, 0,0,0,0,0],
+            [0,0,1,0,1, 0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,1, 0,0,0,0,0],#34
+            [0,0,1,0,1, 0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 1,0,0,0,0],
+            [0,0,1,0,1, 0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0,1,0,0,0],#36
+            [0,0,1,0,1, 0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0,0,1,0,0],
+            [0,0,1,0,1, 0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0,0,0,1,0],#38
+            [0,0,1,0,1, 0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,1],###39
+
+            [0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0]###39
+        ]
+        self.action_embedding_tensor = torch.tensor(self.action_embedding, dtype=torch.float32).cuda()
+        self.embedding_fc = DynamicLinear(25).cuda()
+        self.SA = SelfAttention(dim).cuda()
+
+
+
     def extend_slots(self):
         mu = self.slots_mu.expand(1, 29, -1)
         sigma = self.slots_sigma.expand(1, 29, -1)
@@ -83,6 +141,13 @@ class SlotAttention(nn.Module):
         inputs = self.FC2(inputs)
 
         slots_prev = slots
+
+        #edits
+        action_embed = self.embedding_fc(self.action_embedding_tensor, slots.size(-1))
+        action_embed = action_embed.unsqueeze(0).repeat(slots.size(0), 1, 1)  # [x(0), 64, 256]
+        slots = slots + action_embed
+        slots = self.SA(slots)
+        #edits
 
         b, n, d = inputs.shape
         inputs = self.norm_input(inputs)
@@ -133,6 +198,36 @@ class SoftPositionEmbed3D(nn.Module):
         grid = self.embedding(self.grid)
         return inputs + grid
 
+class DynamicLinear(nn.Module):
+    def __init__(self, input_dim):
+        super(DynamicLinear, self).__init__()
+        self.input_dim = input_dim
+        self.fc_layer = None
+    def forward(self, x, output_dim):
+        # Check if the layer needs to be created or updated
+        if self.fc_layer is None or self.fc_layer.out_features != output_dim:
+            self.fc_layer = nn.Linear(self.input_dim, output_dim).to(x.device)
+        return self.fc_layer(x)
+
+class SelfAttention(nn.Module):
+  def __init__(self, input_dim):
+    super(SelfAttention, self).__init__()
+    self.input_dim = input_dim
+    self.query = nn.Linear(input_dim, input_dim) # [batch_size, seq_length, input_dim]
+    self.key = nn.Linear(input_dim, input_dim) # [batch_size, seq_length, input_dim]
+    self.value = nn.Linear(input_dim, input_dim)
+    self.softmax = nn.Softmax(dim=2)
+   
+  def forward(self, x): # x.shape (batch_size, seq_length, input_dim)
+    queries = self.query(x)
+    keys = self.key(x)
+    values = self.value(x)
+
+    score = torch.bmm(queries, keys.transpose(1, 2))/(self.input_dim**0.5)
+    attention = self.softmax(score)
+    weighted = torch.bmm(attention, values)
+    return weighted
+
 
 class ACTION_SLOT(nn.Module):
     def __init__(self, args, num_class, num_slots=40):
@@ -155,8 +250,8 @@ class ACTION_SLOT(nn.Module):
             self.model = self.model.blocks[:-1] #edited originally -1
             self.in_c = 192 #original 192
 
-            self.resolution = (28, 28)#originally 7x7
-            self.resolution3d = (32, 28, 28)
+            self.resolution = (7, 7)#originally 7x7
+            self.resolution3d = (32, 7, 7)
 
         self.pool = nn.AdaptiveAvgPool3d(output_size=1)
         self.hidden_dim = args.channel
@@ -190,7 +285,7 @@ class ACTION_SLOT(nn.Module):
                 nn.BatchNorm3d(self.in_c),
                 nn.Conv3d(self.in_c, self.hidden_dim, (1, 1, 1), stride=1),
                 nn.ReLU(),)
-        self.drop = nn.Dropout(p=0.5)         
+        self.drop = nn.Dropout(p=0.1)         #originally 0.5 
 
     def forward(self, x): #starts at [b,c,t,h,w]
         x = x.permute(2, 0, 1, 3, 4)
@@ -229,7 +324,7 @@ class ACTION_SLOT(nn.Module):
                 x = self.model[i](x)
 
         # b,c,t,h,w
-        x = self.drop(x)
+        # x = self.drop(x)
         new_seq_len = x.shape[2]
         new_h, new_w = x.shape[3], x.shape[4]
 
@@ -240,19 +335,19 @@ class ACTION_SLOT(nn.Module):
         # [bs, n, w, h, c]
         x = torch.reshape(x, (batch_size, new_seq_len, new_h, new_w, -1))
 
-        #edited
-        x = x.permute(0, 4, 1, 2, 3)  # [batch_size, c, n, w, h]
-        # Step 2: Reshape to combine c and n into one dimension, making the tensor 4D
-        batch_size, c, n, w, h = x.shape
-        x = torch.reshape(x, (batch_size, c * n, w, h))  # [batch_size, c*n, w, h]
-        # Step 3: Apply bilinear interpolation on the spatial dimensions
-        x = F.interpolate(x, scale_factor=4, mode='bilinear', align_corners=True)
-        # Step 4: Reshape back to the 5D shape
-        new_w, new_h = x.shape[2], x.shape[3]  # New interpolated width and height
-        x = torch.reshape(x, (batch_size, c, n, new_w, new_h))  # [batch_size, c, n, new_w, new_h]
-        # Step 5: Permute back to original shape [batch_size, n, new_w, new_h, c]
-        x = x.permute(0, 2, 3, 4, 1) 
-        #edited
+        # #edited
+        # x = x.permute(0, 4, 1, 2, 3)  # [batch_size, c, n, w, h]
+        # # Step 2: Reshape to combine c and n into one dimension, making the tensor 4D
+        # batch_size, c, n, w, h = x.shape
+        # x = torch.reshape(x, (batch_size, c * n, w, h))  # [batch_size, c*n, w, h]
+        # # Step 3: Apply bilinear interpolation on the spatial dimensions
+        # x = F.interpolate(x, scale_factor=2, mode='bilinear', align_corners=True)
+        # # Step 4: Reshape back to the 5D shape
+        # new_w, new_h = x.shape[2], x.shape[3]  # New interpolated width and height
+        # x = torch.reshape(x, (batch_size, c, n, new_w, new_h))  # [batch_size, c, n, new_w, new_h]
+        # # Step 5: Permute back to original shape [batch_size, n, new_w, new_h, c]
+        # x = x.permute(0, 2, 3, 4, 1) 
+        # #edited
 
         x, attn_masks = self.slot_attention(x)
 
@@ -277,6 +372,6 @@ class ACTION_SLOT(nn.Module):
         attn_masks = attn_masks.permute((0, 2, 1, 3, 4))
 
 
-        x = self.drop(x) #
+        # x = self.drop(x) #
         x = self.head(x) #
         return x, attn_masks #

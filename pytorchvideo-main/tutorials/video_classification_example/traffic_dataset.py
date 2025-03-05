@@ -25,6 +25,8 @@ def Trafficdataloader(
     data_path: str,
     box: bool = False,
     bg_mask: bool = False,
+    optic: bool = False,
+    traj: bool = False,
     video_sampler: Type[torch.utils.data.Sampler] = torch.utils.data.RandomSampler,
     transform: Optional[Callable[[Dict[str, Any]], Dict[str, Any]]] = None,
     video_path_prefix: str = "",
@@ -38,6 +40,8 @@ def Trafficdataloader(
         video_paths,
         box,
         bg_mask,
+        optic,
+        traj,
         video_sampler,
         transform,
         decode_audio=decode_audio,
@@ -54,6 +58,8 @@ class TrafficDataset(torch.utils.data.IterableDataset):
         video_paths: List[Tuple[str, Optional[dict]]],
         box: bool = False,
         bg_mask: bool = False,
+        optic: bool = False,
+        traj: bool = False,
         video_sampler: Type[torch.utils.data.Sampler] = torch.utils.data.RandomSampler,
         transform: Optional[Callable[[dict], Any]] = None,
         decode_audio: bool = True,
@@ -67,6 +73,8 @@ class TrafficDataset(torch.utils.data.IterableDataset):
         self._decoder = decoder
         self._box = box
         self._bg_mask = bg_mask
+        self._optic = optic
+        self._traj = traj
 
         self._video_random_generator = None
         if video_sampler == torch.utils.data.RandomSampler:
@@ -83,6 +91,7 @@ class TrafficDataset(torch.utils.data.IterableDataset):
         self._last_clip_end_time = None
         self.video_path_handler = VideoPathHandler()
 
+        self._npy_optic = False
 
     @property
     def video_sampler(self):
@@ -95,7 +104,7 @@ class TrafficDataset(torch.utils.data.IterableDataset):
     def __len__(self): 
         return len(self.video_sampler)
 
-    def __next__(self) -> dict: ### main issue
+    def __next__(self) -> dict: 
         if not self._video_sampler_iter:
             self._video_sampler_iter = iter(MultiProcessSampler(self._video_sampler))
         for i_try in range(self._MAX_CONSECUTIVE_FAILURES):
@@ -112,7 +121,24 @@ class TrafficDataset(torch.utils.data.IterableDataset):
                         decoder=self._decoder,
                     )
 
-                    self._loaded_video_label = (video, info_dict, video_index, None, None)
+                    self._loaded_video_label = (video, info_dict, video_index, None, None, None, None)
+                    if self._optic and self._npy_optic == True:
+                        optic_path = video_path.replace('.mp4', '_optical_flow.npy').replace('/videos/', '/optical_raw_fixed/')
+                        optical_raw = np.load(optic_path)
+                        self._loaded_video_label = (video, info_dict, video_index, None, None, optical_raw, None)
+                    elif self._optic and self._npy_optic == False:
+                        optic_path = video_path.replace('/videos/', '/optical/')
+                        # optic_path = video_path #video path
+                        optic_vid = self.video_path_handler.video_from_path(
+                            optic_path,
+                            decode_audio=self._decode_audio,
+                            decode_video=self._decode_video, 
+                            decoder=self._decoder,
+                        )
+                        self._loaded_video_label = (video, info_dict, video_index, None, None, optic_vid, None)
+
+
+
                     if self._bg_mask:
                         bg_mask_path = video_path.replace('/videos/', '/masks/')
                         background_masks = self.video_path_handler.video_from_path(
@@ -121,15 +147,24 @@ class TrafficDataset(torch.utils.data.IterableDataset):
                             decode_video=self._decode_video, 
                             decoder=self._decoder,
                         )
-                        self._loaded_video_label = (video, info_dict, video_index, None ,background_masks)
+                        self._loaded_video_label = (video, info_dict, video_index, None ,background_masks, None, None)
                     if self._box:
                         # Construct JSON file path
                         json_path = video_path.replace('.mp4', '.json').replace('/videos/', '/jsons/')
                         # Load JSON data
                         bbox_data = read_box(json_path)
-                        self._loaded_video_label = (video, info_dict, video_index, bbox_data, None)
+                        self._loaded_video_label = (video, info_dict, video_index, bbox_data, None, None, None)
                     if self._box and self._bg_mask:
-                        self._loaded_video_label = (video, info_dict, video_index, bbox_data, background_masks)
+                        self._loaded_video_label = (video, info_dict, video_index, bbox_data, background_masks, None, None)
+
+                    if self._traj:
+                        # Construct JSON file path
+                        traj_path = video_path.replace('.mp4', '.json').replace('/videos/', '/traj/')
+                        # Load JSON data
+                        traj_data = read_traj(traj_path)
+                        self._loaded_video_label = (video, info_dict, video_index, None, None, None, traj_data)
+
+
 
 
                 except Exception as e:
@@ -158,16 +193,32 @@ class TrafficDataset(torch.utils.data.IterableDataset):
                 **info_dict,
                 **({"audio": audio_samples} if audio_samples is not None else {}),
             }
+
+
             # Add the bounding box if available
             if self._box:
                 sample_dict["bbox"] = self._loaded_video_label[3]
             # Add background masks if available
             if self._bg_mask:
-                background_masks = self._loaded_video_label[4]
-                bg_mask_frames = background_masks.get_clip(start_sec=start_sec, end_sec=end_sec)
+                bg_end_sec = background_masks.duration
+                bg_masks = self._loaded_video_label[4]
+                bg_mask_frames = bg_masks.get_clip(start_sec=start_sec, end_sec=bg_end_sec)
                 self._loaded_video_label[4].close()
                 sample_dict["bg_masks"] = bg_mask_frames["video"]
 
+
+            if self._optic and self._npy_optic == True:
+                sample_dict["optic"] = self._loaded_video_label[5]
+
+            elif self._optic and self._npy_optic == False:
+                optic_end_sec = optic_vid.duration
+                optic_vid_clip = optic_vid.get_clip(start_sec=start_sec, end_sec=optic_end_sec)
+                self._loaded_video_label[5].close()
+                optic_frames = optic_vid_clip["video"]
+                sample_dict["optic"] = optic_frames
+
+            if self._traj == True:
+                sample_dict["traj"] = self._loaded_video_label[6]
 
             sample_dict = self._transform(sample_dict)
             self._loaded_video_label = None
@@ -354,3 +405,42 @@ def read_box(box_path):
         box_tensors.append(bbox_tensor)
     
     return torch.stack(box_tensors, dim=0)
+
+
+def read_traj(json_path, min_trajectories=64, min_frames=271):
+
+    # Load JSON file
+    with open(json_path, "r") as f:
+        data = json.load(f)
+
+    # Extract all unique trajectories
+    all_trajectories = set()
+    frames_list = list(data.keys())  # Get frames from JSON
+    total_frames = len(frames_list)  # Count frames explicitly
+
+    for frame_data in data.values():
+        all_trajectories.update(frame_data["trajectories"])
+
+    all_trajectories = sorted(list(all_trajectories))  # Ensure consistent ordering
+    trajectory_index = {tid: i for i, tid in enumerate(all_trajectories)}  # Map trajectory ID to index
+
+    # Determine final tensor dimensions
+    num_frames = max(total_frames, min_frames)  # Ensure at least min_frames
+    num_features = len(next(iter(data.values()))["features"][0])  # Get feature size from first frame
+    num_trajectories = max(len(all_trajectories), min_trajectories)  # Ensure at least min_trajectories
+
+    # Initialize tensor with zeros (default padding)
+    tensor_data = torch.zeros((num_trajectories, num_frames, num_features), dtype=torch.float32)
+
+    # Populate the tensor
+    for frame_idx, frame in enumerate(frames_list):  # Ensure correct frame ordering
+        if frame_idx >= total_frames:  # Stop if exceeding original frames
+            break
+        frame_data = data[frame]
+        for traj_id, features in zip(frame_data["trajectories"], frame_data["features"]):
+            if traj_id in trajectory_index:  # Ensure valid trajectory ID
+                traj_idx = trajectory_index[traj_id]
+                if traj_idx < min_trajectories:  # Ensure within trajectory limits
+                    tensor_data[traj_idx, frame_idx, :] = torch.tensor(features, dtype=torch.float32)
+
+    return tensor_data

@@ -121,12 +121,14 @@ class VideoPreprocessor:
                 UniformTemporalSubsample(args.video_num_subsampled),
                 ShortSideScale(size=args.video_min_short_side_scale),
                 ShiftedCenterCrop(size=(args.video_crop_size, args.video_crop_size), shift_x=args.shift_x, shift_y=args.shift_y),
+                ShortSideScale(size=args.video_max_short_side_scale),
             ])
         else:
             transforms = T.Compose([
                 UniformTemporalSubsample(args.video_num_subsampled),
                 ShortSideScale(size=args.video_min_short_side_scale),
                 CenterCrop(size=args.video_crop_size),
+                ShortSideScale(size=args.video_max_short_side_scale),
             ])
         
         # Apply transformations
@@ -158,16 +160,16 @@ class Args:
         self.video_num_subsampled = 32
         self.video_means = [0.45, 0.45, 0.45]
         self.video_stds = [0.225, 0.225, 0.225]
-        self.video_min_short_side_scale = 256
-        self.video_max_short_side_scale = 320
-        self.video_crop_size = 224
-        self.shift_x = 64  # Example shift values
-        self.shift_y = -16
+        self.video_min_short_side_scale = 256*4
+        self.video_max_short_side_scale = 1024
+        self.video_crop_size = 224*4
+        self.shift_x = 64*4  # Example shift values
+        self.shift_y = -16*4
 
 def main():
     args = Args()
-    input_video_path = r"/home/magecliff/Traffic_Recognition/Carom3/original"
-    output_video_path = r"/home/magecliff/Traffic_Recognition/Carom3/videos"
+    input_video_path = r"/home/magecliff/Traffic_Recognition/dataset/Carom0/original"
+    output_video_path = r"/home/magecliff/Traffic_Recognition/Carom_highres/videos"
     preprocessor = VideoPreprocessor()
     preprocessor.preprocess_videos_in_directory(input_video_path, output_video_path, args)
 
