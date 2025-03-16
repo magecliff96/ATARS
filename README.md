@@ -30,6 +30,7 @@ ATARS consists of **39 Full-HD untrimmed videos** from **4-way intersections**, 
 - OpenCV
 - CUDA-enabled GPU (for training models)
 
+
 ### Setup
 ```bash
 # Clone the repository
@@ -39,6 +40,10 @@ cd ATARS
 # Install dependencies
 pip install -r requirements.txt
 ```
+
+### Dataset Preparation
+For Traffic AA Recognition, the dataset can be installed anywhere, but please be sure to edit the address in the parser of train_rus.py or specify it as a command input.
+For Temporal AA Segmentation, the dataset should be installed inside TrafficSegmentation/PointTAD-main/data, and data path of ASformer should adjust accordingly. For more details, please see https://github.com/MCG-NJU/PointTAD and https://github.com/ChinaYi/ASFormer.
 
 ## Usage
 ### Training Action-Slot Model
