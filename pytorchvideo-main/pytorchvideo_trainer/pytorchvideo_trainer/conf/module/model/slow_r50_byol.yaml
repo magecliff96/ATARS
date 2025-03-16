@@ -1,3 +1,0 @@
-_target_: pytorchvideo_trainer.module.byol.create_byol_resnet_50
-backbone_embed_dim: 128
-mmt: 0.996

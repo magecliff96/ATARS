@@ -212,6 +212,7 @@ def main(args):
     print('Training time {}'.format(total_time_str))
 
 def get_args_parser():
+    root = os.path.dirname(os.path.abspath(__file__))
     parser = argparse.ArgumentParser('PointTAD detector',
                                      add_help=False)
     parser.add_argument('--epochs', default=100, type=int)
@@ -219,8 +220,8 @@ def get_args_parser():
     parser.add_argument('--output_dir', default='outputs/', help='path where to save, empty for no saving')
     parser.add_argument('--device', default='cuda', help='device to use for training / testing')
     parser.add_argument('--seed', default=42, type=int)
-    parser.add_argument('--load', default=True, help='load checkpoint')
-    parser.add_argument('--load_path', default=r'/home/magecliff/Traffic_Recognition/PointTAD-main/weights/01.pth', help='load checkpoint')
+    parser.add_argument('--load', default=False, help='load checkpoint')
+    parser.add_argument('--load_path', default=os.path.join(root, 'weights', '0.pth'), help='load checkpoint')
     parser.add_argument('--resume', default='', help='resume from checkpoint')
     parser.add_argument('--start_epoch', default=0, type=int, metavar='N', help='start epoch')
     parser.add_argument('--eval', action='store_true')

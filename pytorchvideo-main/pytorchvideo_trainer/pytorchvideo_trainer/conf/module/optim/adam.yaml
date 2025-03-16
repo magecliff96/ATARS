@@ -1,3 +1,0 @@
-method: 'adam'
-lr: 0.001
-weight_decay: 0

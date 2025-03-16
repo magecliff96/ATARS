@@ -1,2 +1,0 @@
-_target_: pytorchvideo_trainer.module.video_classification.create_classification_model_from_lightning
-checkpoint_path: ???

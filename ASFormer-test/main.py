@@ -18,7 +18,7 @@ random.seed(seed)
 torch.manual_seed(seed)
 torch.cuda.manual_seed_all(seed)
 torch.backends.cudnn.deterministic = True
- 
+root = os.path.dirname(os.path.abspath(__file__))
 parser = argparse.ArgumentParser()
 parser.add_argument('--action', default='train', choices=['train', 'predict'])
 parser.add_argument(
@@ -30,8 +30,8 @@ parser.add_argument(
 parser.add_argument('--model_dir', default='models')
 parser.add_argument('--result_dir', default='results')
 parser.add_argument('--load_model', default=True)
-parser.add_argument('--pretrain', default=r"/home/magecliff/Traffic_Recognition/ASFormer-test/models/weights/15")
-
+parser.add_argument('--pretrain', default=os.path.join(root, 'weights', '0.pth'))
+parser.add_argument('--data', default=r"/home/magecliff/Traffic_Recognition/Carom_TempSeg/")
 ##UVAST settings
 parser.add_argument('--use_pe_tgt', default=True, action='store_true', help='use positional encoding for target in the transcript decoder')
 parser.add_argument('--use_pe_src', default=False, action='store_true', help='use positional encoding for source in the transcript decoder')
@@ -73,15 +73,13 @@ channel_mask_rate = 0.3
 
 # use the full temporal resolution @ 15fps
 sample_rate = 1
-
-
-vid_list_file = r"/home/magecliff/Traffic_Recognition/Carom_TempSeg/bundles/train.split.bundle"
-vid_list_file_val = r"/home/magecliff/Traffic_Recognition/Carom_TempSeg/bundles/val.split.bundle"
-vid_list_file_tst = r"/home/magecliff/Traffic_Recognition/Carom_TempSeg/bundles/test.split.bundle"
-features_path = r"/home/magecliff/Traffic_Recognition/Carom_TempSeg/features/imgnet/"
-gt_path = r"/home/magecliff/Traffic_Recognition/Carom_TempSeg/labels/"
- 
-mapping_file = r"/home/magecliff/Traffic_Recognition/Carom_TempSeg/mapping.txt"
+data_root = args.data
+vid_list_file = os.path.join(data_root, "bundles", "train.split.bundle")
+vid_list_file_val = os.path.join(data_root, "bundles", "val.split.bundle")
+vid_list_file_tst = os.path.join(data_root, "bundles", "test.split.bundle")
+features_path = os.path.join(data_root, "features", "imgnet")
+gt_path = os.path.join(data_root, "labels")
+mapping_file = os.path.join(data_root, "mapping.txt")
 
 # vid_list_file = r"/home/magecliff/Traffic_Recognition/mini_tempseg/mini_bundles/train.split.bundle"
 # vid_list_file_val = r"/home/magecliff/Traffic_Recognition/mini_tempseg/mini_bundles/val.split.bundle"

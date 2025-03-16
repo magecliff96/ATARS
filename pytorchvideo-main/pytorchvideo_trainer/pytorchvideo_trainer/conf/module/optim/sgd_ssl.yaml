@@ -1,5 +1,0 @@
-method: 'sgd'
-lr: 0.6
-weight_decay: 1e-6
-momentum: 0.9
-nesterov: True
