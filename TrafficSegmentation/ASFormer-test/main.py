@@ -30,7 +30,7 @@ parser.add_argument(
 parser.add_argument('--model_dir', default='models')
 parser.add_argument('--result_dir', default='results')
 parser.add_argument('--load_model', default=True)
-parser.add_argument('--pretrain', default=os.path.join(root, 'weights', '0.pth'))
+parser.add_argument('--pretrain', default=os.path.join(root, 'models/weights', '0'))
 parser.add_argument('--data', default=r"/home/magecliff/Traffic_Recognition/Carom_TempSeg/")
 ##UVAST settings
 parser.add_argument('--use_pe_tgt', default=True, action='store_true', help='use positional encoding for target in the transcript decoder')
@@ -77,8 +77,8 @@ data_root = args.data
 vid_list_file = os.path.join(data_root, "bundles", "train.split.bundle")
 vid_list_file_val = os.path.join(data_root, "bundles", "val.split.bundle")
 vid_list_file_tst = os.path.join(data_root, "bundles", "test.split.bundle")
-features_path = os.path.join(data_root, "features", "imgnet")
-gt_path = os.path.join(data_root, "labels")
+features_path = os.path.join(data_root, "features", "imgnet/")
+gt_path = os.path.join(data_root, "labels/")
 mapping_file = os.path.join(data_root, "mapping.txt")
 
 # vid_list_file = r"/home/magecliff/Traffic_Recognition/mini_tempseg/mini_bundles/train.split.bundle"
