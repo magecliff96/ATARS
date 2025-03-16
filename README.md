@@ -32,6 +32,9 @@ ATARS consists of **39 Full-HD untrimmed videos** from **4-way intersections**, 
 
 
 ### Setup
+Using Conda (Recommended)
+
+To recreate the exact environment, use the provided environment.yml file:
 ```bash
 # Clone the repository
 git clone https://github.com/magecliff96/ATARS.git
