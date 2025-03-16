@@ -72,7 +72,6 @@ For training:
 CUDA_VISIBLE_DEVICES=0 python3 main.py --arch asformer
 ```
 
-### Running PointTAD
 For **temporal atomic activity segmentation** using **PointTAD**,  execute below at your TrafficSegmentation/PointTAD-main folder:
 ```bash
 CUDA_VISIBLE_DEVICES=3 python3 main.py --dataset carom
@@ -82,6 +81,16 @@ For evaluation:
 CUDA_VISIBLE_DEVICES=3 python3 main.py --dataset carom --eval
 ```
 
+For **temporal atomic activity segmentation** using **MSTCN** and **MSTCN++**,  a separate environment is needed.
+Please create the environment using:
+```bash
+# Create the environment
+conda env create -f mstcn.yml
+```
+Then execute below at your TrafficSegmentation/MSTCN2 folder:
+```bash
+
+```
 
 ## Citation
 If you use **ATARS** in your research, please cite our paper:
