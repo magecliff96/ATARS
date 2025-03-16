@@ -30,9 +30,6 @@ ATARS consists of **39 Full-HD untrimmed videos** from **4-way intersections**, 
 
 ## Installation
 ### Prerequisites
-- Python 3.x
-- PyTorch
-- OpenCV
 - CUDA-enabled GPU (for training models)
 
 
