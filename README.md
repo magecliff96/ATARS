@@ -42,15 +42,15 @@ pip install -r requirements.txt
 
 ## Usage
 ### Training Action-Slot Model
-To train the **Action-Slot** model for multi-label **atomic activity recognition**, run:
+To train various model for multi-label **atomic activity recognition**, execute below at your TrafficRecognition/video_classification folder:
 ```bash
 CUDA_VISIBLE_DEVICES=1 python3 train_rus.py \
-  --arch action_slot \
+  --arch model_name \
   --batch_size 2
 ```
 
 ### Predicting with ASFormer
-For **multi-label temporal atomic activity segmentation**, use the **ASFormer** model:
+For **multi-label temporal atomic activity segmentation**, , execute below at your TrafficSegmentation/ASFormer-test folder:
 ```bash
 CUDA_VISIBLE_DEVICES=1 python3 main.py --action=predict --arch asformer
 ```
@@ -60,25 +60,15 @@ CUDA_VISIBLE_DEVICES=0 python3 main.py --arch asformer
 ```
 
 ### Running PointTAD
-For **temporal atomic activity segmentation** using **PointTAD**, execute:
+For **temporal atomic activity segmentation** using **PointTAD**,  execute below at your TrafficSegmentation/PointTAD-main folder:
 ```bash
 CUDA_VISIBLE_DEVICES=3 python3 main.py --dataset carom
-```
-For distributed training with multiple GPUs:
-```bash
-CUDA_VISIBLE_DEVICES=0,3 torch.distributed.run --nproc_per_node=2 python3 main.py --dataset carom
 ```
 For evaluation:
 ```bash
 CUDA_VISIBLE_DEVICES=3 python3 main.py --dataset carom --eval
 ```
 
-## Benchmarked Models
-| Model         | Task                           | Performance |
-|--------------|-------------------------------|------------|
-| Action-Slot  | Atomic Activity Recognition   | State-of-the-art on egocentric data |
-| ASFormer    | Temporal Activity Segmentation | Best results for long-tail activities |
-| PointTAD    | Multi-label Temporal Segmentation | Struggles with small pedestrian detection |
 
 ## Citation
 If you use **ATARS** in your research, please cite our paper:
