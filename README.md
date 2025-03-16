@@ -1,5 +1,8 @@
 # ATARS: Aerial Traffic Atomic Activity Recognition and Segmentation Dataset
 
+![Image Description](https://github.com/magecliff96/ATARS/images/intro.png)
+
+
 ## Overview
 The **Aerial Traffic Atomic Activity Recognition and Segmentation (ATARS) Dataset** is a novel dataset designed for **multi-label atomic activity analysis** in traffic scenes. Captured from a **drone perspective**, ATARS is the first dataset to provide **frame-level annotations** of atomic traffic activities, making it ideal for **multi-label temporal atomic activity segmentation and recognition**.
 
