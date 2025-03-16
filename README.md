@@ -37,8 +37,11 @@ ATARS consists of **39 Full-HD untrimmed videos** from **4-way intersections**, 
 git clone https://github.com/magecliff96/ATARS.git
 cd ATARS
 
-# Install dependencies
-pip install -r requirements.txt
+# Create the environment
+conda env create -f environment.yml
+
+# Activate the environment
+conda activate atars_env
 ```
 
 ### Dataset Preparation
