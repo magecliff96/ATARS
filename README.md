@@ -1,6 +1,6 @@
 # ATARS: Aerial Traffic Atomic Activity Recognition and Segmentation Dataset
 
-![ATARS Introduction](https://raw.githubusercontent.com/magecliff96/ATARS/main/images/intro_image.png)
+![ATARS Introduction](https://raw.githubusercontent.com/magecliff96/ATARS/main/images/intro.png)
 
 
 ## Overview
