@@ -26,6 +26,8 @@ ATARS consists of **39 Full-HD untrimmed videos** from **4-way intersections**, 
 | Validation   | 6      |
 | Test        | 6      |
 
+![ATARS Distribution](https://raw.githubusercontent.com/magecliff96/ATARS/main/images/dist.png)
+
 ## Installation
 ### Prerequisites
 - Python 3.x
