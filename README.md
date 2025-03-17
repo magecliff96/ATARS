@@ -9,7 +9,7 @@ The **Aerial Traffic Atomic Activity Recognition and Segmentation (ATARS) Datase
 This repository contains the source code for benchmarking **state-of-the-art models** in atomic activity recognition and segmentation tasks.
 - Atomic Activity Annotations are in the DatasetLabel folder
 - The video dataset can be downloaded here: https://docs.google.com/document/d/1ILzkIccVBLmeqEZhxXrqL1S1Mc7ZNXqR8s5JoJlDTzA/edit?tab=t.0#heading=h.6v1552exvkx
-- A video of our presentation can be found here: https://youtu.be/981SFCLeKQc 
+- A video of our presentation can be found here: https://youtu.be/-DRccB0DvDQ
 - The presentation slides can be found here: https://docs.google.com/presentation/d/1_u2W94oRMJ6jAGGOlLeohwI28nNlfsKG_Dch0_6_gqc/edit?usp=sharing
 
 ## Features
