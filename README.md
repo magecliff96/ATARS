@@ -8,6 +8,7 @@ The **Aerial Traffic Atomic Activity Recognition and Segmentation (ATARS) Datase
 
 This repository contains the source code for benchmarking **state-of-the-art models** in atomic activity recognition and segmentation tasks.
 The dataset can be downloaded here:[placeholder]
+A video of our presentation can be found here: https://youtu.be/981SFCLeKQc
 
 ## Features
 - **Top-down UAV perspective**: Unlike traditional egocentric datasets, ATARS captures full-scene traffic dynamics.
