@@ -1,9 +1,15 @@
 # ATARS: Aerial Traffic Atomic Activity Recognition and Segmentation Dataset
 
+![ATARS Introduction](https://raw.githubusercontent.com/magecliff96/ATARS/main/images/intro.png)
+
+
 ## Overview
 The **Aerial Traffic Atomic Activity Recognition and Segmentation (ATARS) Dataset** is a novel dataset designed for **multi-label atomic activity analysis** in traffic scenes. Captured from a **drone perspective**, ATARS is the first dataset to provide **frame-level annotations** of atomic traffic activities, making it ideal for **multi-label temporal atomic activity segmentation and recognition**.
 
-This repository contains the dataset and source code for benchmarking **state-of-the-art models** in atomic activity recognition and segmentation tasks.
+This repository contains the source code for benchmarking **state-of-the-art models** in atomic activity recognition and segmentation tasks.
+- The dataset can be downloaded here:[placeholder]
+- A video of our presentation can be found here: https://youtu.be/981SFCLeKQc 
+- The presentation slides can be found here:
 
 ## Features
 - **Top-down UAV perspective**: Unlike traditional egocentric datasets, ATARS captures full-scene traffic dynamics.
@@ -23,11 +29,10 @@ ATARS consists of **39 Full-HD untrimmed videos** from **4-way intersections**, 
 | Validation   | 6      |
 | Test        | 6      |
 
+![ATARS Distribution](https://raw.githubusercontent.com/magecliff96/ATARS/main/images/dist.png)
+
 ## Installation
 ### Prerequisites
-- Python 3.x
-- PyTorch
-- OpenCV
 - CUDA-enabled GPU (for training models)
 
 
@@ -70,7 +75,6 @@ For training:
 CUDA_VISIBLE_DEVICES=0 python3 main.py --arch asformer
 ```
 
-### Running PointTAD
 For **temporal atomic activity segmentation** using **PointTAD**,  execute below at your TrafficSegmentation/PointTAD-main folder:
 ```bash
 CUDA_VISIBLE_DEVICES=3 python3 main.py --dataset carom
@@ -80,6 +84,16 @@ For evaluation:
 CUDA_VISIBLE_DEVICES=3 python3 main.py --dataset carom --eval
 ```
 
+For **temporal atomic activity segmentation** using **MSTCN** and **MSTCN++**,  a separate environment is needed.
+Please create the environment using:
+```bash
+# Create the environment
+conda env create -f mstcn.yml
+```
+Then execute below at your TrafficSegmentation/MSTCN2 folder:
+```bash
+
+```
 
 ## Citation
 If you use **ATARS** in your research, please cite our paper:
