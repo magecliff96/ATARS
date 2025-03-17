@@ -1,6 +1,6 @@
 # ATARS: Aerial Traffic Atomic Activity Recognition and Segmentation Dataset
 
-![ATARS Introduction](https://raw.githubusercontent.com/magecliff96/ATARS/main/Images/intro.png)
+![ATARS Introduction](https://raw.githubusercontent.com/magecliff96/ATARS/main/images/intro.png)
 
 
 ## Overview
@@ -30,7 +30,7 @@ ATARS consists of **39 Full-HD untrimmed videos** from **4-way intersections**, 
 | Validation   | 6      |
 | Test        | 6      |
 
-![ATARS Distribution](https://raw.githubusercontent.com/magecliff96/ATARS/main/Images/dist.png)
+![ATARS Distribution](https://raw.githubusercontent.com/magecliff96/ATARS/main/images/dist.png)
 
 ## Installation
 ### Prerequisites
