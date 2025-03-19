@@ -1,0 +1,1003 @@
+[
+    [
+        [
+            {
+                "bbox": [
+                    0,
+                    0,
+                    32,
+                    22
+                ],
+                "class_id": "roundabout"
+            },
+            {
+                "bbox": [
+                    24,
+                    117,
+                    28,
+                    123
+                ],
+                "class_id": "small-vehicle"
+            }
+        ]
+    ],
+    [
+        [
+            {
+                "bbox": [
+                    0,
+                    0,
+                    31,
+                    22
+                ],
+                "class_id": "roundabout"
+            },
+            {
+                "bbox": [
+                    101,
+                    167,
+                    107,
+                    181
+                ],
+                "class_id": "small-vehicle"
+            },
+            {
+                "bbox": [
+                    100,
+                    167,
+                    108,
+                    180
+                ],
+                "class_id": "large-vehicle"
+            }
+        ]
+    ],
+    [
+        [
+            {
+                "bbox": [
+                    0,
+                    0,
+                    31,
+                    22
+                ],
+                "class_id": "roundabout"
+            }
+        ]
+    ],
+    [
+        [
+            {
+                "bbox": [
+                    0,
+                    0,
+                    31,
+                    22
+                ],
+                "class_id": "roundabout"
+            },
+            {
+                "bbox": [
+                    68,
+                    173,
+                    81,
+                    205
+                ],
+                "class_id": "harbor"
+            },
+            {
+                "bbox": [
+                    101,
+                    166,
+                    107,
+                    180
+                ],
+                "class_id": "small-vehicle"
+            },
+            {
+                "bbox": [
+                    68,
+                    172,
+                    81,
+                    205
+                ],
+                "class_id": "large-vehicle"
+            }
+        ]
+    ],
+    [
+        [
+            {
+                "bbox": [
+                    101,
+                    166,
+                    107,
+                    180
+                ],
+                "class_id": "small-vehicle"
+            },
+            {
+                "bbox": [
+                    101,
+                    166,
+                    107,
+                    180
+                ],
+                "class_id": "large-vehicle"
+            },
+            {
+                "bbox": [
+                    0,
+                    0,
+                    31,
+                    22
+                ],
+                "class_id": "roundabout"
+            }
+        ]
+    ],
+    [
+        [
+            {
+                "bbox": [
+                    101,
+                    166,
+                    107,
+                    180
+                ],
+                "class_id": "large-vehicle"
+            },
+            {
+                "bbox": [
+                    69,
+                    187,
+                    82,
+                    220
+                ],
+                "class_id": "large-vehicle"
+            },
+            {
+                "bbox": [
+                    0,
+                    0,
+                    32,
+                    23
+                ],
+                "class_id": "roundabout"
+            }
+        ]
+    ],
+    [
+        [
+            {
+                "bbox": [
+                    101,
+                    166,
+                    107,
+                    180
+                ],
+                "class_id": "large-vehicle"
+            },
+            {
+                "bbox": [
+                    0,
+                    0,
+                    32,
+                    23
+                ],
+                "class_id": "roundabout"
+            }
+        ]
+    ],
+    [
+        [
+            {
+                "bbox": [
+                    101,
+                    166,
+                    107,
+                    180
+                ],
+                "class_id": "large-vehicle"
+            },
+            {
+                "bbox": [
+                    0,
+                    0,
+                    31,
+                    22
+                ],
+                "class_id": "roundabout"
+            }
+        ]
+    ],
+    [
+        [
+            {
+                "bbox": [
+                    101,
+                    166,
+                    107,
+                    180
+                ],
+                "class_id": "large-vehicle"
+            },
+            {
+                "bbox": [
+                    136,
+                    194,
+                    141,
+                    202
+                ],
+                "class_id": "plane"
+            },
+            {
+                "bbox": [
+                    0,
+                    0,
+                    31,
+                    22
+                ],
+                "class_id": "roundabout"
+            }
+        ]
+    ],
+    [
+        [
+            {
+                "bbox": [
+                    101,
+                    166,
+                    107,
+                    180
+                ],
+                "class_id": "large-vehicle"
+            },
+            {
+                "bbox": [
+                    153,
+                    56,
+                    169,
+                    62
+                ],
+                "class_id": "large-vehicle"
+            }
+        ]
+    ],
+    [
+        [
+            {
+                "bbox": [
+                    101,
+                    166,
+                    107,
+                    180
+                ],
+                "class_id": "large-vehicle"
+            }
+        ]
+    ],
+    [
+        [
+            {
+                "bbox": [
+                    101,
+                    166,
+                    107,
+                    180
+                ],
+                "class_id": "small-vehicle"
+            },
+            {
+                "bbox": [
+                    101,
+                    166,
+                    107,
+                    180
+                ],
+                "class_id": "large-vehicle"
+            }
+        ]
+    ],
+    [
+        [
+            {
+                "bbox": [
+                    138,
+                    56,
+                    155,
+                    63
+                ],
+                "class_id": "large-vehicle"
+            },
+            {
+                "bbox": [
+                    101,
+                    166,
+                    107,
+                    180
+                ],
+                "class_id": "large-vehicle"
+            },
+            {
+                "bbox": [
+                    138,
+                    56,
+                    155,
+                    63
+                ],
+                "class_id": "small-vehicle"
+            }
+        ]
+    ],
+    [
+        [
+            {
+                "bbox": [
+                    70,
+                    158,
+                    77,
+                    171
+                ],
+                "class_id": "small-vehicle"
+            },
+            {
+                "bbox": [
+                    134,
+                    56,
+                    150,
+                    62
+                ],
+                "class_id": "small-vehicle"
+            },
+            {
+                "bbox": [
+                    101,
+                    166,
+                    107,
+                    179
+                ],
+                "class_id": "small-vehicle"
+            },
+            {
+                "bbox": [
+                    101,
+                    165,
+                    107,
+                    181
+                ],
+                "class_id": "large-vehicle"
+            },
+            {
+                "bbox": [
+                    54,
+                    143,
+                    64,
+                    147
+                ],
+                "class_id": "large-vehicle"
+            }
+        ]
+    ],
+    [
+        [
+            {
+                "bbox": [
+                    72,
+                    164,
+                    78,
+                    176
+                ],
+                "class_id": "small-vehicle"
+            },
+            {
+                "bbox": [
+                    101,
+                    166,
+                    107,
+                    179
+                ],
+                "class_id": "small-vehicle"
+            },
+            {
+                "bbox": [
+                    129,
+                    56,
+                    144,
+                    63
+                ],
+                "class_id": "small-vehicle"
+            },
+            {
+                "bbox": [
+                    54,
+                    143,
+                    64,
+                    147
+                ],
+                "class_id": "large-vehicle"
+            },
+            {
+                "bbox": [
+                    100,
+                    166,
+                    107,
+                    179
+                ],
+                "class_id": "large-vehicle"
+            }
+        ]
+    ],
+    [
+        [
+            {
+                "bbox": [
+                    123,
+                    55,
+                    139,
+                    62
+                ],
+                "class_id": "large-vehicle"
+            },
+            {
+                "bbox": [
+                    72,
+                    169,
+                    79,
+                    183
+                ],
+                "class_id": "small-vehicle"
+            },
+            {
+                "bbox": [
+                    54,
+                    143,
+                    64,
+                    147
+                ],
+                "class_id": "large-vehicle"
+            }
+        ]
+    ],
+    [
+        [
+            {
+                "bbox": [
+                    72,
+                    177,
+                    79,
+                    189
+                ],
+                "class_id": "small-vehicle"
+            },
+            {
+                "bbox": [
+                    101,
+                    166,
+                    107,
+                    179
+                ],
+                "class_id": "small-vehicle"
+            },
+            {
+                "bbox": [
+                    117,
+                    56,
+                    133,
+                    63
+                ],
+                "class_id": "large-vehicle"
+            }
+        ]
+    ],
+    [
+        [
+            {
+                "bbox": [
+                    73,
+                    182,
+                    79,
+                    196
+                ],
+                "class_id": "small-vehicle"
+            },
+            {
+                "bbox": [
+                    101,
+                    166,
+                    107,
+                    180
+                ],
+                "class_id": "small-vehicle"
+            },
+            {
+                "bbox": [
+                    101,
+                    166,
+                    107,
+                    180
+                ],
+                "class_id": "large-vehicle"
+            }
+        ]
+    ],
+    [
+        [
+            {
+                "bbox": [
+                    73,
+                    189,
+                    79,
+                    203
+                ],
+                "class_id": "small-vehicle"
+            },
+            {
+                "bbox": [
+                    101,
+                    166,
+                    107,
+                    180
+                ],
+                "class_id": "small-vehicle"
+            },
+            {
+                "bbox": [
+                    50,
+                    36,
+                    54,
+                    37
+                ],
+                "class_id": "small-vehicle"
+            }
+        ]
+    ],
+    [
+        [
+            {
+                "bbox": [
+                    73,
+                    196,
+                    79,
+                    209
+                ],
+                "class_id": "small-vehicle"
+            },
+            {
+                "bbox": [
+                    51,
+                    36,
+                    56,
+                    38
+                ],
+                "class_id": "small-vehicle"
+            },
+            {
+                "bbox": [
+                    101,
+                    166,
+                    107,
+                    179
+                ],
+                "class_id": "small-vehicle"
+            },
+            {
+                "bbox": [
+                    131,
+                    217,
+                    139,
+                    223
+                ],
+                "class_id": "plane"
+            }
+        ]
+    ],
+    [
+        [
+            {
+                "bbox": [
+                    73,
+                    202,
+                    80,
+                    217
+                ],
+                "class_id": "small-vehicle"
+            },
+            {
+                "bbox": [
+                    92,
+                    56,
+                    109,
+                    63
+                ],
+                "class_id": "small-vehicle"
+            },
+            {
+                "bbox": [
+                    101,
+                    166,
+                    107,
+                    180
+                ],
+                "class_id": "small-vehicle"
+            },
+            {
+                "bbox": [
+                    132,
+                    212,
+                    139,
+                    224
+                ],
+                "class_id": "small-vehicle"
+            }
+        ]
+    ],
+    [
+        [
+            {
+                "bbox": [
+                    73,
+                    210,
+                    80,
+                    223
+                ],
+                "class_id": "small-vehicle"
+            },
+            {
+                "bbox": [
+                    101,
+                    166,
+                    107,
+                    180
+                ],
+                "class_id": "small-vehicle"
+            },
+            {
+                "bbox": [
+                    86,
+                    56,
+                    103,
+                    63
+                ],
+                "class_id": "large-vehicle"
+            },
+            {
+                "bbox": [
+                    132,
+                    206,
+                    139,
+                    219
+                ],
+                "class_id": "small-vehicle"
+            }
+        ]
+    ],
+    [
+        [
+            {
+                "bbox": [
+                    101,
+                    166,
+                    107,
+                    180
+                ],
+                "class_id": "small-vehicle"
+            },
+            {
+                "bbox": [
+                    132,
+                    198,
+                    138,
+                    212
+                ],
+                "class_id": "small-vehicle"
+            },
+            {
+                "bbox": [
+                    101,
+                    166,
+                    107,
+                    181
+                ],
+                "class_id": "large-vehicle"
+            },
+            {
+                "bbox": [
+                    73,
+                    217,
+                    79,
+                    224
+                ],
+                "class_id": "small-vehicle"
+            }
+        ]
+    ],
+    [
+        [
+            {
+                "bbox": [
+                    132,
+                    193,
+                    139,
+                    206
+                ],
+                "class_id": "small-vehicle"
+            },
+            {
+                "bbox": [
+                    101,
+                    166,
+                    107,
+                    180
+                ],
+                "class_id": "small-vehicle"
+            },
+            {
+                "bbox": [
+                    69,
+                    0,
+                    77,
+                    8
+                ],
+                "class_id": "small-vehicle"
+            }
+        ]
+    ],
+    [
+        [
+            {
+                "bbox": [
+                    132,
+                    188,
+                    139,
+                    202
+                ],
+                "class_id": "small-vehicle"
+            },
+            {
+                "bbox": [
+                    101,
+                    166,
+                    107,
+                    180
+                ],
+                "class_id": "large-vehicle"
+            },
+            {
+                "bbox": [
+                    132,
+                    187,
+                    139,
+                    202
+                ],
+                "class_id": "ship"
+            },
+            {
+                "bbox": [
+                    101,
+                    165,
+                    107,
+                    179
+                ],
+                "class_id": "small-vehicle"
+            },
+            {
+                "bbox": [
+                    69,
+                    0,
+                    77,
+                    8
+                ],
+                "class_id": "small-vehicle"
+            }
+        ]
+    ],
+    [
+        [
+            {
+                "bbox": [
+                    101,
+                    166,
+                    107,
+                    180
+                ],
+                "class_id": "large-vehicle"
+            }
+        ]
+    ],
+    [
+        [
+            {
+                "bbox": [
+                    131,
+                    178,
+                    138,
+                    191
+                ],
+                "class_id": "small-vehicle"
+            },
+            {
+                "bbox": [
+                    101,
+                    166,
+                    107,
+                    180
+                ],
+                "class_id": "large-vehicle"
+            },
+            {
+                "bbox": [
+                    69,
+                    0,
+                    77,
+                    8
+                ],
+                "class_id": "small-vehicle"
+            }
+        ]
+    ],
+    [
+        [
+            {
+                "bbox": [
+                    101,
+                    166,
+                    107,
+                    180
+                ],
+                "class_id": "small-vehicle"
+            },
+            {
+                "bbox": [
+                    69,
+                    0,
+                    77,
+                    8
+                ],
+                "class_id": "small-vehicle"
+            },
+            {
+                "bbox": [
+                    101,
+                    166,
+                    108,
+                    179
+                ],
+                "class_id": "large-vehicle"
+            },
+            {
+                "bbox": [
+                    131,
+                    173,
+                    137,
+                    186
+                ],
+                "class_id": "small-vehicle"
+            }
+        ]
+    ],
+    [
+        [
+            {
+                "bbox": [
+                    101,
+                    166,
+                    107,
+                    180
+                ],
+                "class_id": "small-vehicle"
+            },
+            {
+                "bbox": [
+                    131,
+                    169,
+                    137,
+                    181
+                ],
+                "class_id": "small-vehicle"
+            },
+            {
+                "bbox": [
+                    101,
+                    166,
+                    107,
+                    180
+                ],
+                "class_id": "large-vehicle"
+            }
+        ]
+    ],
+    [
+        [
+            {
+                "bbox": [
+                    131,
+                    165,
+                    137,
+                    178
+                ],
+                "class_id": "large-vehicle"
+            },
+            {
+                "bbox": [
+                    101,
+                    166,
+                    107,
+                    180
+                ],
+                "class_id": "large-vehicle"
+            },
+            {
+                "bbox": [
+                    33,
+                    61,
+                    48,
+                    129
+                ],
+                "class_id": "harbor"
+            }
+        ]
+    ],
+    [
+        [
+            {
+                "bbox": [
+                    101,
+                    166,
+                    107,
+                    180
+                ],
+                "class_id": "large-vehicle"
+            },
+            {
+                "bbox": [
+                    131,
+                    162,
+                    137,
+                    174
+                ],
+                "class_id": "large-vehicle"
+            },
+            {
+                "bbox": [
+                    26,
+                    56,
+                    41,
+                    63
+                ],
+                "class_id": "large-vehicle"
+            }
+        ]
+    ],
+    [
+        [
+            {
+                "bbox": [
+                    101,
+                    166,
+                    107,
+                    180
+                ],
+                "class_id": "small-vehicle"
+            },
+            {
+                "bbox": [
+                    131,
+                    159,
+                    137,
+                    172
+                ],
+                "class_id": "large-vehicle"
+            },
+            {
+                "bbox": [
+                    101,
+                    166,
+                    107,
+                    180
+                ],
+                "class_id": "large-vehicle"
+            }
+        ]
+    ]
+]

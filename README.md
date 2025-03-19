@@ -59,7 +59,8 @@ For Temporal AA Segmentation, the dataset should be installed inside TrafficSegm
 
 ## Usage
 ### Training Action-Slot Model
-To train various model for multi-label **atomic activity recognition**, execute below at your TrafficRecognition/video_classification folder:
+To train various model for multi-label **atomic activity recognition**, first preprocess video clips using transform_rus.py in TrafficRecognition/video_classification folder.
+Then execute below at your TrafficRecognition/video_classification folder:
 ```bash
 CUDA_VISIBLE_DEVICES=1 python3 train_rus.py \
   --arch model_name \

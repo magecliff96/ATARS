@@ -1,0 +1,769 @@
+[
+    [
+        [
+            {
+                "bbox": [
+                    16,
+                    29,
+                    25,
+                    38
+                ],
+                "class_id": "swimming-pool"
+            },
+            {
+                "bbox": [
+                    6,
+                    213,
+                    18,
+                    218
+                ],
+                "class_id": "small-vehicle"
+            },
+            {
+                "bbox": [
+                    6,
+                    212,
+                    18,
+                    217
+                ],
+                "class_id": "large-vehicle"
+            },
+            {
+                "bbox": [
+                    112,
+                    219,
+                    125,
+                    224
+                ],
+                "class_id": "plane"
+            }
+        ]
+    ],
+    [
+        [
+            {
+                "bbox": [
+                    16,
+                    29,
+                    25,
+                    38
+                ],
+                "class_id": "swimming-pool"
+            },
+            {
+                "bbox": [
+                    6,
+                    213,
+                    18,
+                    218
+                ],
+                "class_id": "small-vehicle"
+            },
+            {
+                "bbox": [
+                    6,
+                    212,
+                    18,
+                    217
+                ],
+                "class_id": "large-vehicle"
+            },
+            {
+                "bbox": [
+                    8,
+                    84,
+                    11,
+                    89
+                ],
+                "class_id": "small-vehicle"
+            }
+        ]
+    ],
+    [
+        [
+            {
+                "bbox": [
+                    16,
+                    29,
+                    25,
+                    38
+                ],
+                "class_id": "swimming-pool"
+            },
+            {
+                "bbox": [
+                    6,
+                    213,
+                    18,
+                    218
+                ],
+                "class_id": "small-vehicle"
+            },
+            {
+                "bbox": [
+                    6,
+                    116,
+                    21,
+                    122
+                ],
+                "class_id": "large-vehicle"
+            },
+            {
+                "bbox": [
+                    6,
+                    212,
+                    18,
+                    217
+                ],
+                "class_id": "large-vehicle"
+            }
+        ]
+    ],
+    [
+        [
+            {
+                "bbox": [
+                    6,
+                    213,
+                    18,
+                    218
+                ],
+                "class_id": "small-vehicle"
+            },
+            {
+                "bbox": [
+                    5,
+                    115,
+                    21,
+                    122
+                ],
+                "class_id": "large-vehicle"
+            },
+            {
+                "bbox": [
+                    6,
+                    212,
+                    18,
+                    217
+                ],
+                "class_id": "large-vehicle"
+            },
+            {
+                "bbox": [
+                    16,
+                    29,
+                    25,
+                    38
+                ],
+                "class_id": "swimming-pool"
+            }
+        ]
+    ],
+    [
+        [
+            {
+                "bbox": [
+                    16,
+                    29,
+                    25,
+                    38
+                ],
+                "class_id": "swimming-pool"
+            },
+            {
+                "bbox": [
+                    6,
+                    116,
+                    22,
+                    122
+                ],
+                "class_id": "large-vehicle"
+            },
+            {
+                "bbox": [
+                    6,
+                    213,
+                    18,
+                    218
+                ],
+                "class_id": "small-vehicle"
+            },
+            {
+                "bbox": [
+                    6,
+                    212,
+                    18,
+                    217
+                ],
+                "class_id": "large-vehicle"
+            },
+            {
+                "bbox": [
+                    0,
+                    85,
+                    4,
+                    91
+                ],
+                "class_id": "small-vehicle"
+            }
+        ]
+    ],
+    [
+        [
+            {
+                "bbox": [
+                    16,
+                    29,
+                    25,
+                    38
+                ],
+                "class_id": "swimming-pool"
+            },
+            {
+                "bbox": [
+                    5,
+                    115,
+                    22,
+                    122
+                ],
+                "class_id": "large-vehicle"
+            },
+            {
+                "bbox": [
+                    6,
+                    212,
+                    18,
+                    217
+                ],
+                "class_id": "large-vehicle"
+            },
+            {
+                "bbox": [
+                    114,
+                    190,
+                    122,
+                    207
+                ],
+                "class_id": "small-vehicle"
+            },
+            {
+                "bbox": [
+                    0,
+                    85,
+                    5,
+                    90
+                ],
+                "class_id": "small-vehicle"
+            }
+        ]
+    ],
+    [
+        [
+            {
+                "bbox": [
+                    15,
+                    29,
+                    26,
+                    38
+                ],
+                "class_id": "swimming-pool"
+            }
+        ]
+    ],
+    [
+        [
+            {
+                "bbox": [
+                    16,
+                    29,
+                    26,
+                    38
+                ],
+                "class_id": "swimming-pool"
+            }
+        ]
+    ],
+    [
+        [
+            {
+                "bbox": [
+                    15,
+                    29,
+                    26,
+                    38
+                ],
+                "class_id": "swimming-pool"
+            },
+            {
+                "bbox": [
+                    146,
+                    86,
+                    160,
+                    94
+                ],
+                "class_id": "plane"
+            },
+            {
+                "bbox": [
+                    6,
+                    116,
+                    23,
+                    122
+                ],
+                "class_id": "large-vehicle"
+            }
+        ]
+    ],
+    [
+        [
+            {
+                "bbox": [
+                    16,
+                    29,
+                    25,
+                    38
+                ],
+                "class_id": "swimming-pool"
+            },
+            {
+                "bbox": [
+                    5,
+                    115,
+                    22,
+                    122
+                ],
+                "class_id": "large-vehicle"
+            }
+        ]
+    ],
+    [
+        [
+            {
+                "bbox": [
+                    16,
+                    29,
+                    25,
+                    38
+                ],
+                "class_id": "swimming-pool"
+            },
+            {
+                "bbox": [
+                    6,
+                    115,
+                    22,
+                    122
+                ],
+                "class_id": "large-vehicle"
+            }
+        ]
+    ],
+    [
+        [
+            {
+                "bbox": [
+                    16,
+                    29,
+                    25,
+                    37
+                ],
+                "class_id": "swimming-pool"
+            }
+        ]
+    ],
+    [
+        [
+            {
+                "bbox": [
+                    16,
+                    29,
+                    25,
+                    37
+                ],
+                "class_id": "swimming-pool"
+            }
+        ]
+    ],
+    [
+        [
+            {
+                "bbox": [
+                    16,
+                    29,
+                    25,
+                    37
+                ],
+                "class_id": "swimming-pool"
+            },
+            {
+                "bbox": [
+                    6,
+                    116,
+                    23,
+                    122
+                ],
+                "class_id": "large-vehicle"
+            }
+        ]
+    ],
+    [
+        [
+            {
+                "bbox": [
+                    16,
+                    29,
+                    25,
+                    37
+                ],
+                "class_id": "swimming-pool"
+            },
+            {
+                "bbox": [
+                    6,
+                    116,
+                    23,
+                    123
+                ],
+                "class_id": "large-vehicle"
+            }
+        ]
+    ],
+    [
+        [
+            {
+                "bbox": [
+                    16,
+                    29,
+                    25,
+                    37
+                ],
+                "class_id": "swimming-pool"
+            }
+        ]
+    ],
+    [
+        [
+            {
+                "bbox": [
+                    104,
+                    111,
+                    114,
+                    122
+                ],
+                "class_id": "small-vehicle"
+            }
+        ]
+    ],
+    [
+        [
+            {
+                "bbox": [
+                    100,
+                    116,
+                    112,
+                    129
+                ],
+                "class_id": "small-vehicle"
+            },
+            {
+                "bbox": [
+                    99,
+                    116,
+                    112,
+                    129
+                ],
+                "class_id": "plane"
+            },
+            {
+                "bbox": [
+                    100,
+                    116,
+                    112,
+                    129
+                ],
+                "class_id": "ship"
+            },
+            {
+                "bbox": [
+                    112,
+                    151,
+                    119,
+                    167
+                ],
+                "class_id": "small-vehicle"
+            }
+        ]
+    ],
+    [
+        [
+            {
+                "bbox": [
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "class_id": -1
+            }
+        ]
+    ],
+    [
+        [
+            {
+                "bbox": [
+                    16,
+                    29,
+                    25,
+                    37
+                ],
+                "class_id": "swimming-pool"
+            }
+        ]
+    ],
+    [
+        [
+            {
+                "bbox": [
+                    36,
+                    89,
+                    43,
+                    99
+                ],
+                "class_id": "plane"
+            }
+        ]
+    ],
+    [
+        [
+            {
+                "bbox": [
+                    93,
+                    143,
+                    100,
+                    155
+                ],
+                "class_id": "small-vehicle"
+            }
+        ]
+    ],
+    [
+        [
+            {
+                "bbox": [
+                    94,
+                    151,
+                    100,
+                    163
+                ],
+                "class_id": "small-vehicle"
+            },
+            {
+                "bbox": [
+                    109,
+                    42,
+                    122,
+                    55
+                ],
+                "class_id": "small-vehicle"
+            }
+        ]
+    ],
+    [
+        [
+            {
+                "bbox": [
+                    94,
+                    159,
+                    100,
+                    171
+                ],
+                "class_id": "small-vehicle"
+            },
+            {
+                "bbox": [
+                    81,
+                    69,
+                    96,
+                    80
+                ],
+                "class_id": "plane"
+            },
+            {
+                "bbox": [
+                    81,
+                    69,
+                    96,
+                    80
+                ],
+                "class_id": "small-vehicle"
+            },
+            {
+                "bbox": [
+                    80,
+                    70,
+                    96,
+                    81
+                ],
+                "class_id": "large-vehicle"
+            }
+        ]
+    ],
+    [
+        [
+            {
+                "bbox": [
+                    94,
+                    166,
+                    100,
+                    178
+                ],
+                "class_id": "small-vehicle"
+            }
+        ]
+    ],
+    [
+        [
+            {
+                "bbox": [
+                    94,
+                    175,
+                    100,
+                    186
+                ],
+                "class_id": "small-vehicle"
+            },
+            {
+                "bbox": [
+                    112,
+                    150,
+                    119,
+                    163
+                ],
+                "class_id": "small-vehicle"
+            }
+        ]
+    ],
+    [
+        [
+            {
+                "bbox": [
+                    95,
+                    182,
+                    101,
+                    195
+                ],
+                "class_id": "small-vehicle"
+            },
+            {
+                "bbox": [
+                    112,
+                    150,
+                    119,
+                    163
+                ],
+                "class_id": "small-vehicle"
+            }
+        ]
+    ],
+    [
+        [
+            {
+                "bbox": [
+                    95,
+                    192,
+                    102,
+                    204
+                ],
+                "class_id": "small-vehicle"
+            }
+        ]
+    ],
+    [
+        [
+            {
+                "bbox": [
+                    96,
+                    201,
+                    102,
+                    213
+                ],
+                "class_id": "small-vehicle"
+            },
+            {
+                "bbox": [
+                    6,
+                    116,
+                    22,
+                    122
+                ],
+                "class_id": "large-vehicle"
+            }
+        ]
+    ],
+    [
+        [
+            {
+                "bbox": [
+                    96,
+                    209,
+                    103,
+                    222
+                ],
+                "class_id": "small-vehicle"
+            },
+            {
+                "bbox": [
+                    7,
+                    212,
+                    17,
+                    216
+                ],
+                "class_id": "small-vehicle"
+            },
+            {
+                "bbox": [
+                    6,
+                    212,
+                    18,
+                    217
+                ],
+                "class_id": "large-vehicle"
+            }
+        ]
+    ],
+    [
+        [
+            {
+                "bbox": [
+                    97,
+                    218,
+                    102,
+                    224
+                ],
+                "class_id": "small-vehicle"
+            },
+            {
+                "bbox": [
+                    7,
+                    212,
+                    17,
+                    216
+                ],
+                "class_id": "small-vehicle"
+            }
+        ]
+    ],
+    [
+        [
+            {
+                "bbox": [
+                    7,
+                    212,
+                    17,
+                    216
+                ],
+                "class_id": "small-vehicle"
+            }
+        ]
+    ]
+]

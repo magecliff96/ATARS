@@ -1,0 +1,1201 @@
+[
+    [
+        [
+            {
+                "bbox": [
+                    127,
+                    73,
+                    139,
+                    86
+                ],
+                "class_id": "ship"
+            }
+        ]
+    ],
+    [
+        [
+            {
+                "bbox": [
+                    132,
+                    79,
+                    142,
+                    90
+                ],
+                "class_id": "ship"
+            },
+            {
+                "bbox": [
+                    42,
+                    174,
+                    56,
+                    191
+                ],
+                "class_id": "ship"
+            },
+            {
+                "bbox": [
+                    66,
+                    161,
+                    69,
+                    165
+                ],
+                "class_id": "ship"
+            },
+            {
+                "bbox": [
+                    0,
+                    87,
+                    6,
+                    90
+                ],
+                "class_id": "small-vehicle"
+            },
+            {
+                "bbox": [
+                    5,
+                    196,
+                    7,
+                    200
+                ],
+                "class_id": "small-vehicle"
+            }
+        ]
+    ],
+    [
+        [
+            {
+                "bbox": [
+                    0,
+                    87,
+                    6,
+                    90
+                ],
+                "class_id": "small-vehicle"
+            },
+            {
+                "bbox": [
+                    67,
+                    161,
+                    69,
+                    165
+                ],
+                "class_id": "ship"
+            },
+            {
+                "bbox": [
+                    138,
+                    83,
+                    146,
+                    95
+                ],
+                "class_id": "ship"
+            },
+            {
+                "bbox": [
+                    66,
+                    170,
+                    68,
+                    174
+                ],
+                "class_id": "ship"
+            }
+        ]
+    ],
+    [
+        [
+            {
+                "bbox": [
+                    118,
+                    54,
+                    127,
+                    68
+                ],
+                "class_id": "ship"
+            },
+            {
+                "bbox": [
+                    140,
+                    87,
+                    153,
+                    100
+                ],
+                "class_id": "ship"
+            },
+            {
+                "bbox": [
+                    0,
+                    87,
+                    6,
+                    90
+                ],
+                "class_id": "small-vehicle"
+            },
+            {
+                "bbox": [
+                    37,
+                    145,
+                    46,
+                    153
+                ],
+                "class_id": "swimming-pool"
+            }
+        ]
+    ],
+    [
+        [
+            {
+                "bbox": [
+                    67,
+                    161,
+                    69,
+                    165
+                ],
+                "class_id": "ship"
+            },
+            {
+                "bbox": [
+                    146,
+                    93,
+                    158,
+                    103
+                ],
+                "class_id": "ship"
+            }
+        ]
+    ],
+    [
+        [
+            {
+                "bbox": [
+                    37,
+                    146,
+                    46,
+                    154
+                ],
+                "class_id": "swimming-pool"
+            },
+            {
+                "bbox": [
+                    126,
+                    67,
+                    135,
+                    80
+                ],
+                "class_id": "ship"
+            },
+            {
+                "bbox": [
+                    66,
+                    161,
+                    68,
+                    165
+                ],
+                "class_id": "ship"
+            },
+            {
+                "bbox": [
+                    152,
+                    97,
+                    163,
+                    107
+                ],
+                "class_id": "ship"
+            },
+            {
+                "bbox": [
+                    66,
+                    170,
+                    68,
+                    175
+                ],
+                "class_id": "ship"
+            }
+        ]
+    ],
+    [
+        [
+            {
+                "bbox": [
+                    37,
+                    146,
+                    47,
+                    154
+                ],
+                "class_id": "swimming-pool"
+            },
+            {
+                "bbox": [
+                    129,
+                    72,
+                    141,
+                    86
+                ],
+                "class_id": "ship"
+            },
+            {
+                "bbox": [
+                    66,
+                    161,
+                    68,
+                    165
+                ],
+                "class_id": "ship"
+            },
+            {
+                "bbox": [
+                    145,
+                    174,
+                    149,
+                    187
+                ],
+                "class_id": "ship"
+            },
+            {
+                "bbox": [
+                    66,
+                    170,
+                    68,
+                    175
+                ],
+                "class_id": "ship"
+            },
+            {
+                "bbox": [
+                    135,
+                    177,
+                    141,
+                    189
+                ],
+                "class_id": "ship"
+            },
+            {
+                "bbox": [
+                    0,
+                    73,
+                    40,
+                    87
+                ],
+                "class_id": "harbor"
+            }
+        ]
+    ],
+    [
+        [
+            {
+                "bbox": [
+                    37,
+                    146,
+                    46,
+                    154
+                ],
+                "class_id": "swimming-pool"
+            },
+            {
+                "bbox": [
+                    66,
+                    160,
+                    69,
+                    165
+                ],
+                "class_id": "ship"
+            },
+            {
+                "bbox": [
+                    145,
+                    173,
+                    149,
+                    185
+                ],
+                "class_id": "ship"
+            },
+            {
+                "bbox": [
+                    135,
+                    176,
+                    141,
+                    190
+                ],
+                "class_id": "ship"
+            },
+            {
+                "bbox": [
+                    133,
+                    78,
+                    145,
+                    92
+                ],
+                "class_id": "ship"
+            },
+            {
+                "bbox": [
+                    66,
+                    170,
+                    68,
+                    174
+                ],
+                "class_id": "ship"
+            }
+        ]
+    ],
+    [
+        [
+            {
+                "bbox": [
+                    38,
+                    146,
+                    47,
+                    154
+                ],
+                "class_id": "swimming-pool"
+            },
+            {
+                "bbox": [
+                    138,
+                    84,
+                    150,
+                    95
+                ],
+                "class_id": "ship"
+            },
+            {
+                "bbox": [
+                    66,
+                    162,
+                    68,
+                    165
+                ],
+                "class_id": "ship"
+            },
+            {
+                "bbox": [
+                    66,
+                    170,
+                    68,
+                    175
+                ],
+                "class_id": "ship"
+            },
+            {
+                "bbox": [
+                    145,
+                    172,
+                    149,
+                    183
+                ],
+                "class_id": "ship"
+            },
+            {
+                "bbox": [
+                    1,
+                    75,
+                    37,
+                    88
+                ],
+                "class_id": "harbor"
+            }
+        ]
+    ],
+    [
+        [
+            {
+                "bbox": [
+                    37,
+                    146,
+                    47,
+                    154
+                ],
+                "class_id": "swimming-pool"
+            },
+            {
+                "bbox": [
+                    66,
+                    160,
+                    69,
+                    165
+                ],
+                "class_id": "ship"
+            },
+            {
+                "bbox": [
+                    145,
+                    89,
+                    157,
+                    100
+                ],
+                "class_id": "ship"
+            },
+            {
+                "bbox": [
+                    1,
+                    75,
+                    37,
+                    88
+                ],
+                "class_id": "harbor"
+            }
+        ]
+    ],
+    [
+        [
+            {
+                "bbox": [
+                    150,
+                    93,
+                    163,
+                    103
+                ],
+                "class_id": "ship"
+            },
+            {
+                "bbox": [
+                    37,
+                    146,
+                    47,
+                    154
+                ],
+                "class_id": "swimming-pool"
+            },
+            {
+                "bbox": [
+                    66,
+                    160,
+                    69,
+                    165
+                ],
+                "class_id": "ship"
+            },
+            {
+                "bbox": [
+                    66,
+                    169,
+                    68,
+                    175
+                ],
+                "class_id": "ship"
+            }
+        ]
+    ],
+    [
+        [
+            {
+                "bbox": [
+                    37,
+                    146,
+                    46,
+                    155
+                ],
+                "class_id": "swimming-pool"
+            },
+            {
+                "bbox": [
+                    66,
+                    160,
+                    69,
+                    165
+                ],
+                "class_id": "ship"
+            },
+            {
+                "bbox": [
+                    157,
+                    97,
+                    167,
+                    106
+                ],
+                "class_id": "ship"
+            }
+        ]
+    ],
+    [
+        [
+            {
+                "bbox": [
+                    3,
+                    192,
+                    17,
+                    201
+                ],
+                "class_id": "plane"
+            },
+            {
+                "bbox": [
+                    36,
+                    145,
+                    48,
+                    155
+                ],
+                "class_id": "swimming-pool"
+            },
+            {
+                "bbox": [
+                    39,
+                    187,
+                    49,
+                    204
+                ],
+                "class_id": "plane"
+            }
+        ]
+    ],
+    [
+        [
+            {
+                "bbox": [
+                    37,
+                    146,
+                    47,
+                    155
+                ],
+                "class_id": "swimming-pool"
+            },
+            {
+                "bbox": [
+                    4,
+                    191,
+                    17,
+                    201
+                ],
+                "class_id": "harbor"
+            },
+            {
+                "bbox": [
+                    3,
+                    192,
+                    17,
+                    201
+                ],
+                "class_id": "plane"
+            }
+        ]
+    ],
+    [
+        [
+            {
+                "bbox": [
+                    37,
+                    146,
+                    47,
+                    155
+                ],
+                "class_id": "swimming-pool"
+            },
+            {
+                "bbox": [
+                    40,
+                    188,
+                    48,
+                    205
+                ],
+                "class_id": "ship"
+            },
+            {
+                "bbox": [
+                    4,
+                    192,
+                    16,
+                    201
+                ],
+                "class_id": "harbor"
+            },
+            {
+                "bbox": [
+                    66,
+                    169,
+                    68,
+                    175
+                ],
+                "class_id": "ship"
+            }
+        ]
+    ],
+    [
+        [
+            {
+                "bbox": [
+                    41,
+                    189,
+                    48,
+                    205
+                ],
+                "class_id": "ship"
+            },
+            {
+                "bbox": [
+                    187,
+                    107,
+                    202,
+                    122
+                ],
+                "class_id": "plane"
+            },
+            {
+                "bbox": [
+                    5,
+                    193,
+                    16,
+                    201
+                ],
+                "class_id": "harbor"
+            },
+            {
+                "bbox": [
+                    37,
+                    146,
+                    47,
+                    154
+                ],
+                "class_id": "swimming-pool"
+            },
+            {
+                "bbox": [
+                    66,
+                    170,
+                    68,
+                    174
+                ],
+                "class_id": "ship"
+            },
+            {
+                "bbox": [
+                    59,
+                    126,
+                    69,
+                    137
+                ],
+                "class_id": "ship"
+            }
+        ]
+    ],
+    [
+        [
+            {
+                "bbox": [
+                    40,
+                    189,
+                    48,
+                    206
+                ],
+                "class_id": "ship"
+            },
+            {
+                "bbox": [
+                    66,
+                    170,
+                    68,
+                    174
+                ],
+                "class_id": "ship"
+            },
+            {
+                "bbox": [
+                    5,
+                    193,
+                    16,
+                    201
+                ],
+                "class_id": "harbor"
+            },
+            {
+                "bbox": [
+                    37,
+                    146,
+                    47,
+                    155
+                ],
+                "class_id": "swimming-pool"
+            }
+        ]
+    ],
+    [
+        [
+            {
+                "bbox": [
+                    40,
+                    188,
+                    48,
+                    207
+                ],
+                "class_id": "ship"
+            }
+        ]
+    ],
+    [
+        [
+            {
+                "bbox": [
+                    41,
+                    188,
+                    48,
+                    207
+                ],
+                "class_id": "ship"
+            },
+            {
+                "bbox": [
+                    125,
+                    222,
+                    130,
+                    224
+                ],
+                "class_id": "ship"
+            }
+        ]
+    ],
+    [
+        [
+            {
+                "bbox": [
+                    167,
+                    107,
+                    181,
+                    134
+                ],
+                "class_id": "harbor"
+            },
+            {
+                "bbox": [
+                    40,
+                    188,
+                    48,
+                    207
+                ],
+                "class_id": "ship"
+            }
+        ]
+    ],
+    [
+        [
+            {
+                "bbox": [
+                    41,
+                    188,
+                    48,
+                    206
+                ],
+                "class_id": "ship"
+            }
+        ]
+    ],
+    [
+        [
+            {
+                "bbox": [
+                    41,
+                    189,
+                    48,
+                    206
+                ],
+                "class_id": "ship"
+            },
+            {
+                "bbox": [
+                    125,
+                    212,
+                    131,
+                    223
+                ],
+                "class_id": "ship"
+            },
+            {
+                "bbox": [
+                    70,
+                    148,
+                    76,
+                    161
+                ],
+                "class_id": "ship"
+            },
+            {
+                "bbox": [
+                    70,
+                    148,
+                    76,
+                    160
+                ],
+                "class_id": "large-vehicle"
+            },
+            {
+                "bbox": [
+                    125,
+                    212,
+                    131,
+                    224
+                ],
+                "class_id": "harbor"
+            }
+        ]
+    ],
+    [
+        [
+            {
+                "bbox": [
+                    41,
+                    189,
+                    48,
+                    206
+                ],
+                "class_id": "ship"
+            },
+            {
+                "bbox": [
+                    125,
+                    210,
+                    131,
+                    224
+                ],
+                "class_id": "harbor"
+            },
+            {
+                "bbox": [
+                    72,
+                    156,
+                    76,
+                    168
+                ],
+                "class_id": "ship"
+            },
+            {
+                "bbox": [
+                    125,
+                    210,
+                    131,
+                    223
+                ],
+                "class_id": "ship"
+            }
+        ]
+    ],
+    [
+        [
+            {
+                "bbox": [
+                    41,
+                    189,
+                    48,
+                    207
+                ],
+                "class_id": "ship"
+            },
+            {
+                "bbox": [
+                    72,
+                    161,
+                    77,
+                    172
+                ],
+                "class_id": "ship"
+            },
+            {
+                "bbox": [
+                    37,
+                    146,
+                    47,
+                    155
+                ],
+                "class_id": "swimming-pool"
+            }
+        ]
+    ],
+    [
+        [
+            {
+                "bbox": [
+                    41,
+                    188,
+                    48,
+                    206
+                ],
+                "class_id": "ship"
+            },
+            {
+                "bbox": [
+                    125,
+                    205,
+                    130,
+                    219
+                ],
+                "class_id": "ship"
+            },
+            {
+                "bbox": [
+                    72,
+                    167,
+                    77,
+                    180
+                ],
+                "class_id": "ship"
+            },
+            {
+                "bbox": [
+                    66,
+                    170,
+                    68,
+                    175
+                ],
+                "class_id": "ship"
+            },
+            {
+                "bbox": [
+                    125,
+                    206,
+                    131,
+                    219
+                ],
+                "class_id": "harbor"
+            },
+            {
+                "bbox": [
+                    66,
+                    170,
+                    68,
+                    175
+                ],
+                "class_id": "small-vehicle"
+            },
+            {
+                "bbox": [
+                    14,
+                    112,
+                    22,
+                    115
+                ],
+                "class_id": "large-vehicle"
+            }
+        ]
+    ],
+    [
+        [
+            {
+                "bbox": [
+                    41,
+                    189,
+                    48,
+                    206
+                ],
+                "class_id": "ship"
+            },
+            {
+                "bbox": [
+                    73,
+                    173,
+                    77,
+                    187
+                ],
+                "class_id": "ship"
+            },
+            {
+                "bbox": [
+                    14,
+                    112,
+                    22,
+                    115
+                ],
+                "class_id": "large-vehicle"
+            },
+            {
+                "bbox": [
+                    72,
+                    173,
+                    77,
+                    187
+                ],
+                "class_id": "large-vehicle"
+            },
+            {
+                "bbox": [
+                    23,
+                    87,
+                    36,
+                    93
+                ],
+                "class_id": "large-vehicle"
+            }
+        ]
+    ],
+    [
+        [
+            {
+                "bbox": [
+                    41,
+                    189,
+                    48,
+                    205
+                ],
+                "class_id": "ship"
+            },
+            {
+                "bbox": [
+                    73,
+                    180,
+                    78,
+                    193
+                ],
+                "class_id": "ship"
+            },
+            {
+                "bbox": [
+                    125,
+                    201,
+                    130,
+                    215
+                ],
+                "class_id": "ship"
+            },
+            {
+                "bbox": [
+                    36,
+                    145,
+                    48,
+                    156
+                ],
+                "class_id": "swimming-pool"
+            }
+        ]
+    ],
+    [
+        [
+            {
+                "bbox": [
+                    41,
+                    188,
+                    48,
+                    206
+                ],
+                "class_id": "ship"
+            },
+            {
+                "bbox": [
+                    125,
+                    199,
+                    130,
+                    213
+                ],
+                "class_id": "ship"
+            }
+        ]
+    ],
+    [
+        [
+            {
+                "bbox": [
+                    40,
+                    188,
+                    48,
+                    205
+                ],
+                "class_id": "ship"
+            },
+            {
+                "bbox": [
+                    75,
+                    195,
+                    79,
+                    207
+                ],
+                "class_id": "ship"
+            }
+        ]
+    ],
+    [
+        [
+            {
+                "bbox": [
+                    40,
+                    187,
+                    49,
+                    206
+                ],
+                "class_id": "plane"
+            },
+            {
+                "bbox": [
+                    40,
+                    186,
+                    48,
+                    205
+                ],
+                "class_id": "ship"
+            },
+            {
+                "bbox": [
+                    37,
+                    146,
+                    47,
+                    155
+                ],
+                "class_id": "swimming-pool"
+            },
+            {
+                "bbox": [
+                    23,
+                    87,
+                    38,
+                    93
+                ],
+                "class_id": "large-vehicle"
+            },
+            {
+                "bbox": [
+                    5,
+                    197,
+                    7,
+                    201
+                ],
+                "class_id": "small-vehicle"
+            }
+        ]
+    ],
+    [
+        [
+            {
+                "bbox": [
+                    41,
+                    186,
+                    49,
+                    205
+                ],
+                "class_id": "ship"
+            },
+            {
+                "bbox": [
+                    76,
+                    213,
+                    81,
+                    223
+                ],
+                "class_id": "ship"
+            },
+            {
+                "bbox": [
+                    37,
+                    146,
+                    47,
+                    155
+                ],
+                "class_id": "swimming-pool"
+            }
+        ]
+    ],
+    [
+        [
+            {
+                "bbox": [
+                    38,
+                    146,
+                    46,
+                    154
+                ],
+                "class_id": "swimming-pool"
+            },
+            {
+                "bbox": [
+                    39,
+                    186,
+                    49,
+                    206
+                ],
+                "class_id": "plane"
+            }
+        ]
+    ]
+]
