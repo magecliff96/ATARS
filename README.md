@@ -86,13 +86,7 @@ For evaluation:
 CUDA_VISIBLE_DEVICES=3 python3 main.py --dataset carom --eval
 ```
 
-For **temporal atomic activity segmentation** using **MSTCN** and **MSTCN++**,  a separate environment is needed.
-Please create the environment using:
-```bash
-# Create the environment
-conda env create -f mstcn.yml
-```
-Then execute below at your TrafficSegmentation/MSTCN2 folder:
+For **temporal atomic activity segmentation** using **MSTCN** and **MSTCN++**, execute below at your TrafficSegmentation/MS-TCN2 folder:
 ```bash
 python main.py --action=train --dataset=${1} --split=${2} \
                 --num_epochs=1000 \
