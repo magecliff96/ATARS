@@ -6,7 +6,7 @@ import random
 
 
 class BatchGenerator(object):
-    def __init__(self, num_classes, actions_dict, gt_path, features_path, sample_rate):
+    def __init__(self, num_classes, actions_dict, gt_path, features_path, sample_rate, args):
         self.list_of_examples = list()
         self.index = 0
         self.num_classes = num_classes
@@ -14,6 +14,7 @@ class BatchGenerator(object):
         self.gt_path = gt_path
         self.features_path = features_path
         self.sample_rate = sample_rate
+        self.args = args
 
     def reset(self):
         self.index = 0
@@ -38,9 +39,12 @@ class BatchGenerator(object):
         batch_target = []
         for vid in batch:
             features = np.load(self.features_path + vid.split('.')[0] + '.npy')
-            file_ptr = open(self.gt_path + vid, 'r')
+            file_ptr = open(self.gt_path + vid.split('.')[0] + '.txt', 'r')
             content = file_ptr.read().split('\n')[:-1]
             file_ptr.close()
+
+            # print(np.shape(features))
+            # print(np.shape(content))
             num_frames = min(np.shape(features)[1], len(content))
             classes = np.zeros((num_frames, self.num_classes))
             for i in range(num_frames):

@@ -17,9 +17,8 @@ torch.backends.cudnn.deterministic = True
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--action', default='train')
-
-
 parser.add_argument('--dataset', default="carom")
+parser.add_argument('--dataroot', default='/home/magecliff/Traffic_Recognition/Carom_TempSeg', type=str)
 parser.add_argument('--split', default='1')
 
 parser.add_argument('--features_dim', default='2048', type=int)
@@ -29,19 +28,7 @@ parser.add_argument('--lr', default='0.0005', type=float)
 
 parser.add_argument('--num_f_maps', default='64', type=int)
 
-#asformer
-parser.add_argument('--num_layers', default='10',type=int)
-parser.add_argument('--r1', default='2',type=int)
-parser.add_argument('--r2', default='2',type=int)
-parser.add_argument('--channel_masking_rate', default='0.3',type=float)
-
 # Need input
-parser.add_argument(
-    "--arch",
-    default="asformer",
-    choices=["asformer", "MSTCN"], 
-    type=str,
-)
 parser.add_argument('--num_epochs', type=int)
 parser.add_argument('--num_layers_PG', type=int)
 parser.add_argument('--num_layers_R', type=int)
@@ -50,8 +37,6 @@ parser.add_argument('--num_R', type=int)
 # david
 parser.add_argument('--bce_pos_weight', type=float, default=1, help='')
 #
-
-
 
 args = parser.parse_args()
 
@@ -73,20 +58,20 @@ if args.dataset == "50salads":
     sample_rate = 2
 elif args.dataset == "carom":
     sample_rate = 1
-# print(args.dataset)
-root = r'/home/oort/MS-TCN2/'
-vid_list_file = root + "data/"+args.dataset+"/splits/train.split"+args.split+".bundle"
-vid_list_file_tst = root + "data/"+args.dataset+"/splits/test.split"+args.split+".bundle"
+
+vid_list_file = args.dataroot+"/bundles/train.split.bundle"
+vid_list_file_tst = args.dataroot+"/bundles/test.split.bundle"
+#vid_list_file_tst = "./data/"+args.dataset+"/splits/train.split"+args.split+".bundle"
 # david
-vid_list_file_val = root + "data/"+args.dataset+"/splits/val.split"+args.split+".bundle"
+vid_list_file_val = args.dataroot+"/bundles/val.split.bundle"
 #
-features_path = root + "data/"+args.dataset+"/features/"
-gt_path = root + "data/"+args.dataset+"/groundTruth/"
+features_path = args.dataroot+"/features/"
+gt_path = args.dataroot+"/groundTruth/"
 
-mapping_file = root + "data/"+args.dataset+"/mapping.txt"
+mapping_file = args.dataroot+"/mapping.txt"
 
-model_dir ="./models/"+args.dataset+"/split_"+args.split
-results_dir ="./results/"+args.dataset+"/split_"+args.split
+model_dir = "./models/"+args.dataset+"/split_"+args.split
+results_dir = "./results/"+args.dataset+"/split_"+args.split
 
 if not os.path.exists(model_dir):
     os.makedirs(model_dir)
@@ -103,15 +88,15 @@ for a in actions:
 num_classes = len(actions_dict)
 trainer = Trainer(args, num_layers_PG, num_layers_R, num_R, num_f_maps, features_dim, num_classes, args.dataset, args.split, device=device)
 if args.action == "train":
-    batch_gen = BatchGenerator(num_classes, actions_dict, gt_path, features_path, sample_rate)
+    batch_gen = BatchGenerator(num_classes, actions_dict, gt_path, features_path, sample_rate, args)
     batch_gen.read_data(vid_list_file)
 
     # david
     # validate
-    batch_gen_val = BatchGenerator(num_classes, actions_dict, gt_path, features_path, sample_rate)
+    batch_gen_val = BatchGenerator(num_classes, actions_dict, gt_path, features_path, sample_rate, args)
     batch_gen_val.read_data(vid_list_file_val)
     #
-    print("Training Dataloaded")
+
     trainer.train(model_dir, batch_gen, batch_gen_val, num_epochs=num_epochs, batch_size=bz, learning_rate=lr, device=device)
 
 if args.action == "predict":

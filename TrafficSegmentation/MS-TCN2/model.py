@@ -10,8 +10,6 @@ import numpy as np
 from loguru import logger
 
 from sklearn.metrics import average_precision_score
-from asformer.model import MyTransformer
-
 
 class MS_TCN2(nn.Module):
     def __init__(self, num_layers_PG, num_layers_R, num_R, num_f_maps, dim, num_classes):
@@ -100,11 +98,7 @@ class DilatedResidualLayer(nn.Module):
 
 class Trainer:
     def __init__(self, args, num_layers_PG, num_layers_R, num_R, num_f_maps, dim, num_classes, dataset, split, device):
-        self.arch = args.arch
-        if args.arch == 'asformer':
-            self.model = MyTransformer(3, args.num_layers, args.r1, args.r2, num_f_maps, dim, num_classes, args.channel_masking_rate)
-        else:
-            self.model = MS_TCN2(num_layers_PG, num_layers_R, num_R, num_f_maps, dim, num_classes)
+        self.model = MS_TCN2(num_layers_PG, num_layers_R, num_R, num_f_maps, dim, num_classes)
         # self.bce = nn.BCEWithLogitsLoss(reduction='mean')
         self.num_classes = num_classes
 
@@ -138,47 +132,38 @@ class Trainer:
                 batch_input, batch_target, mask = batch_gen.next_batch(batch_size)
                 batch_input, batch_target, mask = batch_input.to(device), batch_target.to(device), mask.to(device)
                 optimizer.zero_grad()
-                if self.arch == "asformer":
-                    predictions = self.model(batch_input,mask)
-                else:
-                    predictions = self.model(batch_input)
+                predictions = self.model(batch_input)
 
                 # print(f"mask shape: {mask.shape}")
                 # print(f"batch target shape: {batch_target.shape}")
 
                 loss = 0
                 for p in predictions:
-                    if self.arch == "asformer":
-                        loss += self.bce(p.transpose(2, 1).contiguous().view(-1, self.num_classes), batch_target.view(-1, self.num_classes))
-                        loss += 0.15 * torch.mean(torch.clamp(
-                            self.mse(F.log_softmax(p[:, :, 1:], dim=1), F.log_softmax(p.detach()[:, :, :-1], dim=1)), min=0,
-                            max=16) * mask[:, :, 1:])
-                    else:
-                        # 1. 计算时间平滑的 MSE 损失
-                        log_probs_current = F.logsigmoid(p[:, :, 1:])  # 当前时间步的对数概率
-                        log_probs_previous = F.logsigmoid(p.detach()[:, :, :-1])  # 前一时间步的对数概率（detach 防止梯度回传）
-                        
-                        # 计算 MSE 损失
-                        mse_loss = self.mse(log_probs_current, log_probs_previous)
-                        clamped_mse = torch.clamp(mse_loss, min=0, max=16)
-                        masked_mse = clamped_mse * mask[:, :, 1:]  # 应用掩码
-                        mean_mse_loss = torch.mean(masked_mse)
-                        loss += 0.15 * mean_mse_loss  # 将损失缩放并添加到总损失中
+                    # 1. 计算时间平滑的 MSE 损失
+                    log_probs_current = F.logsigmoid(p[:, :, 1:])  # 当前时间步的对数概率
+                    log_probs_previous = F.logsigmoid(p.detach()[:, :, :-1])  # 前一时间步的对数概率（detach 防止梯度回传）
+                    
+                    # 计算 MSE 损失
+                    mse_loss = self.mse(log_probs_current, log_probs_previous)
+                    clamped_mse = torch.clamp(mse_loss, min=0, max=16)
+                    masked_mse = clamped_mse * mask[:, :, 1:]  # 应用掩码
+                    mean_mse_loss = torch.mean(masked_mse)
+                    loss += 0.15 * mean_mse_loss  # 将损失缩放并添加到总损失中
 
-                        # 2. 计算主要的 BCE 损失
-                        p_flat = p.permute(0, 2, 1).reshape(-1, self.num_classes)  # (batch_size * seq_len, num_classes)
-                        batch_target_flat = batch_target.permute(0, 2, 1).reshape(-1, self.num_classes).float()
-                        
-                        # 不要对预测和目标应用掩码
-                        bce_loss = self.bce(p_flat, batch_target_flat)  # 输出形状：[N, num_classes]
-                        
-                        # 在损失上应用掩码
-                        bce_loss = bce_loss * mask_flat  # 掩码形状：[N, num_classes]
-                        
-                        # 累加有效位置的损失
-                        loss += bce_loss.sum()
-                        
+                    # 2. 计算主要的 BCE 损失
+                    p_flat = p.permute(0, 2, 1).reshape(-1, self.num_classes)  # (batch_size * seq_len, num_classes)
+                    batch_target_flat = batch_target.permute(0, 2, 1).reshape(-1, self.num_classes).float()
                     mask_flat = mask.permute(0, 2, 1).reshape(-1, self.num_classes).float()
+                    
+                    # 不要对预测和目标应用掩码
+                    bce_loss = self.bce(p_flat, batch_target_flat)  # 输出形状：[N, num_classes]
+                    
+                    # 在损失上应用掩码
+                    bce_loss = bce_loss * mask_flat  # 掩码形状：[N, num_classes]
+                    
+                    # 累加有效位置的损失
+                    loss += bce_loss.sum()
+                    
                     # 累加有效元素的数量
                     total_valid_elements += mask_flat.sum().item()
 
@@ -240,9 +225,6 @@ class Trainer:
             # torch.save(optimizer.state_dict(), save_dir + "/epoch-" + str(epoch + 1) + ".opt")
             # logger.info("[epoch %d]: epoch loss = %f,   mAP = %f" % (
             #     epoch + 1, epoch_loss / len(batch_gen.list_of_examples), mAP))
-            print("[epoch %d]: training loss = %f, training mAP = %f, validation mAP = %f" % (
-                        epoch + 1, average_epoch_loss, mAP, val_mAP))
-            print(f"New best validation mAP: {self.best_val_mAP:.4f}")
         
     def validate(self, batch_gen, device):
         self.model.eval()
@@ -252,10 +234,7 @@ class Trainer:
             while batch_gen.has_next():
                 batch_input, batch_target, mask = batch_gen.next_batch(1)
                 batch_input, batch_target, mask = batch_input.to(device), batch_target.to(device), mask.to(device)
-                if self.arch == "asformer":
-                    predictions = self.model(batch_input,mask)
-                else:
-                    predictions = self.model(batch_input)
+                predictions = self.model(batch_input)
 
                 # 收集预测值、真实标签和掩码
                 predicted = torch.sigmoid(predictions[-1]).cpu()
@@ -323,7 +302,8 @@ class Trainer:
         self.model.eval()
         with torch.no_grad():
             self.model.to(device)
-            self.model.load_state_dict(torch.load(model_dir + "/epoch-" + str(epoch) + ".model"))
+            #self.model.load_state_dict(torch.load(model_dir + "/epoch-" + str(epoch) + ".model"))
+            self.model.load_state_dict(torch.load(model_dir + "/best.model"))
             file_ptr = open(vid_list_file, 'r')
             list_of_vids = file_ptr.read().split('\n')[:-1]
             file_ptr.close()
@@ -399,12 +379,16 @@ class Trainer:
                     y_pred_binary = (y_scores >= 0.5).astype(int)
                     recall = recall_score(y_true, y_pred_binary)
                     per_class_recall[idx_to_action[c]] = recall
+            
+            mAP = np.mean(list(per_class_ap.values())) if per_class_ap else 0
 
             # 将结果保存到 txt 文件
             results_file = results_dir + "/per_class_metrics.txt"
             with open(results_file, 'w') as f:
                 # f.write("Per-class mAP and Recall:\n")
                 # f.write("Class\tmAP\tRecall\n")
+                f.write("mean mAP:\n")
+                f.write(f"{mAP:.4f}\n")
                 f.write("Per-class mAP:\n")
                 f.write("Class\tmAP\n")
                 for action in idx_to_action.values():
@@ -412,4 +396,5 @@ class Trainer:
                     recall = per_class_recall.get(action, 0)
                     # f.write(f"{action}\t{ap:.4f}\t{recall:.4f}\n")
                     f.write(f"{action}\t{ap:.4f}\n")
+                
 
