@@ -58,7 +58,7 @@ For Traffic AA Recognition, the dataset can be installed anywhere, but please be
 For Temporal AA Segmentation, the dataset should be installed inside TrafficSegmentation/PointTAD-main/data, and data path of ASformer should adjust accordingly. For more details, please see https://github.com/MCG-NJU/PointTAD and https://github.com/ChinaYi/ASFormer.
 
 ## Usage
-### Training Action-Slot Model
+### Training AA Recognition Model
 To train various model for multi-label **atomic activity recognition**, first preprocess video clips using transform_rus.py in TrafficRecognition/video_classification folder.
 Then execute below at your TrafficRecognition/video_classification folder:
 ```bash
@@ -67,14 +67,14 @@ CUDA_VISIBLE_DEVICES=1 python3 train_rus.py \
   --batch_size 2
 ```
 
-### Predicting with ASFormer
+### Training AA Segmentation Models
 For **multi-label temporal atomic activity segmentation**, , execute below at your TrafficSegmentation/ASFormer-test folder:
 ```bash
-CUDA_VISIBLE_DEVICES=1 python3 main.py --action=predict --arch asformer
-```
-For training:
-```bash
 CUDA_VISIBLE_DEVICES=0 python3 main.py --arch asformer
+```
+For evaluation:
+```bash
+CUDA_VISIBLE_DEVICES=1 python3 main.py --action=predict --arch asformer
 ```
 
 For **temporal atomic activity segmentation** using **PointTAD**,  execute below at your TrafficSegmentation/PointTAD-main folder:
@@ -86,15 +86,17 @@ For evaluation:
 CUDA_VISIBLE_DEVICES=3 python3 main.py --dataset carom --eval
 ```
 
-For **temporal atomic activity segmentation** using **MSTCN** and **MSTCN++**,  a separate environment is needed.
-Please create the environment using:
+For **temporal atomic activity segmentation** using **MSTCN** and **MSTCN++**, execute below at your TrafficSegmentation/MS-TCN2 folder:
 ```bash
-# Create the environment
-conda env create -f mstcn.yml
-```
-Then execute below at your TrafficSegmentation/MSTCN2 folder:
-```bash
-
+python main.py --action=train --dataset=${1} --split=${2} \
+                --num_epochs=1000 \
+                --num_layers_PG=11 \
+                --num_layers_R=10 \
+                --num_R=3 \
+                --num_f_maps=64 \
+                --lr=0.0001 \
+                --bce_pos_weight=1 \
+                --bz=8
 ```
 
 ## Citation
