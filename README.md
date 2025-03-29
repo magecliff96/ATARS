@@ -99,10 +99,11 @@ python main.py --action=train --dataset=${1} --split=${2} \
 ```
 For evaluation:
 ```bash
-python main.py --action=predict --dataset=${1} --split=${2} \
+CUDA_VISIBLE_DEVICES=1 python main.py --action=predict\
                --num_layers_PG=11 \
                --num_layers_R=10 \
                --num_R=3
+
 ```
 
 ## Citation
