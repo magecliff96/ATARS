@@ -68,7 +68,7 @@ CUDA_VISIBLE_DEVICES=1 python3 train_rus.py \
 ```
 
 ### Training AA Segmentation Models
-# For **multi-label temporal atomic activity segmentation**, , execute below at your TrafficSegmentation/ASFormer-test folder:
+#### For **multi-label temporal atomic activity segmentation**, , execute below at your TrafficSegmentation/ASFormer-test folder:
 ```bash
 CUDA_VISIBLE_DEVICES=0 python3 main.py --arch asformer
 ```
@@ -77,7 +77,7 @@ For evaluation:
 CUDA_VISIBLE_DEVICES=1 python3 main.py --action=predict --arch asformer
 ```
 
-# For **temporal atomic activity segmentation** using **PointTAD**,  execute below at your TrafficSegmentation/PointTAD-main folder:
+#### For **temporal atomic activity segmentation** using **PointTAD**,  execute below at your TrafficSegmentation/PointTAD-main folder:
 ```bash
 CUDA_VISIBLE_DEVICES=3 python3 main.py --dataset carom
 ```
@@ -86,7 +86,7 @@ For evaluation:
 CUDA_VISIBLE_DEVICES=3 python3 main.py --dataset carom --eval
 ```
 
-# For **temporal atomic activity segmentation** using **MSTCN** and **MSTCN++**, execute below at your TrafficSegmentation/MS-TCN2 folder:
+#### For **temporal atomic activity segmentation** using **MSTCN** and **MSTCN++**, execute below at your TrafficSegmentation/MS-TCN2 folder:
 ```bash
 python main.py --action=train --dataset=${1} --split=${2} \
                 --num_epochs=1000 \
