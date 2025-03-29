@@ -98,6 +98,13 @@ python main.py --action=train --dataset=${1} --split=${2} \
                 --bce_pos_weight=1 \
                 --bz=8
 ```
+For evaluation:
+```bash
+python main.py --action=predict --dataset=${1} --split=${2} --num_epochs=${3} \
+               --num_layers_PG=11 \
+               --num_layers_R=10 \
+               --num_R=3
+```
 
 ## Citation
 If you use **ATARS** in your research, please cite our paper:
