@@ -57,7 +57,7 @@ conda activate atars_env
 For Traffic AA Recognition, the dataset can be installed anywhere, but please be sure to edit the address in the parser of train_rus.py or specify it as a command input.
 For Temporal AA Segmentation, the dataset should be installed inside TrafficSegmentation/PointTAD-main/data, and data path of ASformer should adjust accordingly. For more details, please see https://github.com/MCG-NJU/PointTAD and https://github.com/ChinaYi/ASFormer.
 
-TrafficRecognition/video_classification/transform_rus.py is used to resize and prepate the videos
+TrafficRecognition/video_classification/transform_rus.py is used to resize and prepate the videos.
 
 ## Training AA Recognition Model
 To train various model for multi-label **atomic activity recognition**, first preprocess video clips using transform_rus.py in TrafficRecognition/video_classification folder.
