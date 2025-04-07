@@ -297,7 +297,7 @@ class Trainer:
     #             f_ptr.write("### Frame level recognition: ###\n")
     #             f_ptr.write('\n'.join(recognition))
     #             f_ptr.close()
-    def predict(self, model_dir, results_dir, features_path, vid_list_file, actions_dict,
+    def predict(self, model_dir, results_dir, features_path, vid_list_file, epoch, actions_dict,
             device, sample_rate, gt_path, mapping_file):
         self.model.eval()
         with torch.no_grad():
@@ -332,7 +332,7 @@ class Trainer:
                 predicted = torch.sigmoid(predictions[-1]).cpu().squeeze(0)  # (num_classes, seq_len)
 
                 # 加载真实标签
-                file_ptr = open(gt_path + vid.split('.')[0] + '.txt', 'r')
+                file_ptr = open(gt_path + vid, 'r')
                 content = file_ptr.read().split('\n')[:-1]
                 file_ptr.close()
                 num_frames = min(predicted.shape[1], len(content))
@@ -391,13 +391,10 @@ class Trainer:
                 f.write(f"{mAP:.4f}\n")
                 f.write("Per-class mAP:\n")
                 f.write("Class\tmAP\n")
-                print("Class\tmAP")
                 for action in idx_to_action.values():
                     ap = per_class_ap.get(action, 0)
                     recall = per_class_recall.get(action, 0)
                     # f.write(f"{action}\t{ap:.4f}\t{recall:.4f}\n")
                     f.write(f"{action}\t{ap:.4f}\n")
-                    print(f"{action}\t{ap:.4f}")
-                print(f"mean mAP:{mAP:.4f}")
                 
 

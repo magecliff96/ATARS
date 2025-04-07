@@ -29,7 +29,7 @@ parser.add_argument('--lr', default='0.0005', type=float)
 parser.add_argument('--num_f_maps', default='64', type=int)
 
 # Need input
-parser.add_argument('--num_epochs', default=500, type=int)
+parser.add_argument('--num_epochs', default=600, type=int)
 parser.add_argument('--num_layers_PG', type=int)
 parser.add_argument('--num_layers_R', type=int)
 parser.add_argument('--num_R', type=int)
@@ -101,5 +101,5 @@ if args.action == "train":
 
 if args.action == "predict":
     #trainer.predict(model_dir, results_dir, features_path, vid_list_file_tst, num_epochs, actions_dict, device, sample_rate)
-    trainer.predict(model_dir, results_dir, features_path, vid_list_file_tst,
+    trainer.predict(model_dir, results_dir, features_path, vid_list_file_tst, num_epochs,
                     actions_dict, device, sample_rate, gt_path, mapping_file)

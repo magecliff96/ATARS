@@ -8,6 +8,7 @@ from torch import optim
 import copy
 import numpy as np
 from loguru import logger
+import math
 
 from sklearn.metrics import average_precision_score
 
@@ -16,15 +17,56 @@ class MS_TCN2(nn.Module):
         super(MS_TCN2, self).__init__()
         self.PG = Prediction_Generation(num_layers_PG, num_f_maps, dim, num_classes)
         self.Rs = nn.ModuleList([copy.deepcopy(Refinement(num_layers_R, num_f_maps, num_classes, num_classes)) for s in range(num_R)])
+        self.cosine_cls = CosineWaveClassifier(input_dim=dim)
 
-    def forward(self, x):
+    def forward(self, x): # x => [b, d, t]
+        cos_sig, cos_out = self.cosine_cls(x)  # make it (B, D, T) => (B, 1, T)
+        x = torch.cat([x, cos_sig], dim=1)
         out = self.PG(x)
         outputs = out.unsqueeze(0)
         for R in self.Rs:
             out = R(out)
             outputs = torch.cat((outputs, out.unsqueeze(0)), dim=0)
+        return outputs, cos_out
+    
 
-        return outputs
+class CosineWaveClassifier(nn.Module):
+    def __init__(self, input_dim, hidden_dim=64):
+        super(CosineWaveClassifier, self).__init__()
+        # temporal encoder: light 1D conv to extract temporal variation
+        self.temporal_encoder = nn.Sequential(
+            nn.Conv1d(input_dim, hidden_dim, kernel_size=3, padding=1),
+            nn.ReLU(),
+            nn.Conv1d(hidden_dim, hidden_dim, kernel_size=3, padding=1),
+            nn.ReLU()
+        )
+        # global pooling to estimate global wave parameters
+        self.param_head = nn.Sequential(
+            nn.AdaptiveAvgPool1d(1),          # (B, H, 1)
+            nn.Flatten(),                     # (B, H)
+            nn.Linear(hidden_dim, 3)          # output: amplitude, frequency, phase
+        )
+        self.threshold = 0.5  # learnable global threshold
+
+
+    def forward(self, x):
+        # Temporal feature extraction
+        feat = self.temporal_encoder(x)  # (B, hidden_dim, T)
+        # Predict cosine parameters from full sequence (global)
+        wave_params = self.param_head(feat)  # (B, 3)
+        A, f, phi = wave_params[:, 0], wave_params[:, 1], wave_params[:, 2]  # (B,)
+        # Generate cosine signal over time
+        B, _, T = feat.shape
+        t = torch.linspace(0, 1, T, device=x.device).unsqueeze(0).expand(B, T)  # (B, T)
+        y = A.unsqueeze(1) * torch.cos(2 * math.pi * f.unsqueeze(1) * t + phi.unsqueeze(1))  # (B, T)
+        # Apply threshold
+        y_out = y * torch.where(torch.abs(y) >= self.threshold, 1.0, 0.01)
+        pos_gate = torch.sigmoid(y_out - self.threshold)
+        neg_gate = torch.sigmoid(-(y_out + self.threshold))
+        cos_out = pos_gate - neg_gate  # (B, T)
+
+        return y_out.unsqueeze(1), cos_out  # y_out & cos_out = (B, 1, T)
+
 
 class Prediction_Generation(nn.Module):
     def __init__(self, num_layers, num_f_maps, dim, num_classes):
@@ -32,7 +74,7 @@ class Prediction_Generation(nn.Module):
 
         self.num_layers = num_layers
 
-        self.conv_1x1_in = nn.Conv1d(dim, num_f_maps, 1)
+        self.conv_1x1_in = nn.Conv1d(dim+1, num_f_maps, 1)#edited +1 bc cos features
 
         self.conv_dilated_1 = nn.ModuleList((
             nn.Conv1d(num_f_maps, num_f_maps, 3, padding=2**(num_layers-1-i), dilation=2**(num_layers-1-i))
@@ -111,6 +153,13 @@ class Trainer:
         # david
         self.best_val_mAP = 0
         #
+        self.class_names = [
+            '12v', '12v+', '13v', '13v+', '14v', '14v+', '21v', '21v+', 
+            '23v', '23v+', '24v', '24v+', '31v', '31v+', '32v', '32v+', 
+            '34v', '34v+', '41v', '41v+', '42v', '42v+', '43v', '43v+', 
+            '12p', '14p', '21p', '23p', '32p', '34p', '41p', '43p'
+        ]
+
 
         #logger.add('logs/' + dataset + "_" + split + "_{time}.log")
         log_filename = f'logs/bz_{args.bz}_lr_{args.lr}_epoch_{args.num_epochs}_bceposweight_{args.bce_pos_weight}.log'
@@ -132,7 +181,7 @@ class Trainer:
                 batch_input, batch_target, mask = batch_gen.next_batch(batch_size)
                 batch_input, batch_target, mask = batch_input.to(device), batch_target.to(device), mask.to(device)
                 optimizer.zero_grad()
-                predictions = self.model(batch_input)
+                predictions, cos_out = self.model(batch_input)
 
                 # print(f"mask shape: {mask.shape}")
                 # print(f"batch target shape: {batch_target.shape}")
@@ -164,6 +213,36 @@ class Trainer:
                     # 累加有效位置的损失
                     loss += bce_loss.sum()
                     
+
+                    #edited
+                    positive_classes = ['24v', '24v+', '42v', '42v+']
+                    negative_classes = ['31v', '31v+', '13v', '13v+']
+                    class_indices = {name: i for i, name in enumerate(self.class_names)}
+
+                    pos_indices = torch.tensor([class_indices[name] for name in positive_classes], device=batch_target.device)
+                    neg_indices = torch.tensor([class_indices[name] for name in negative_classes], device=batch_target.device)
+
+                    # Extract relevant class activations: shape → (B, T)
+                    pos_mask = batch_target[:, pos_indices, :].any(dim=1)  # (B, T)
+                    neg_mask = batch_target[:, neg_indices, :].any(dim=1)  # (B, T)
+
+                    # Check for conflicts: both positive and negative active at the same time
+                    # conflict = pos_mask & neg_mask
+                    # if conflict.any():
+                    #     conflict_locs = torch.nonzero(conflict)
+                    #     print("Conflict detected in cosine GT at positions:", conflict_locs)
+                    #     raise ValueError("A frame has both positive and negative class labels — invalid for cosine signal.")
+
+                    # Initialize GT
+                    cos_gt = torch.zeros(batch_target.shape[0], batch_target.shape[2], device=batch_target.device)  # (B, T)
+                    cos_gt[pos_mask] += 1.0
+                    cos_gt[neg_mask] += -1.0
+
+                    cos_loss = self.mse(cos_out, cos_gt)
+                    loss += 0.1 * cos_loss.mean()
+                    #edited
+
+
                     # 累加有效元素的数量
                     total_valid_elements += mask_flat.sum().item()
 
@@ -234,7 +313,7 @@ class Trainer:
             while batch_gen.has_next():
                 batch_input, batch_target, mask = batch_gen.next_batch(1)
                 batch_input, batch_target, mask = batch_input.to(device), batch_target.to(device), mask.to(device)
-                predictions = self.model(batch_input)
+                predictions, _ = self.model(batch_input)
 
                 # 收集预测值、真实标签和掩码
                 predicted = torch.sigmoid(predictions[-1]).cpu()
@@ -297,7 +376,7 @@ class Trainer:
     #             f_ptr.write("### Frame level recognition: ###\n")
     #             f_ptr.write('\n'.join(recognition))
     #             f_ptr.close()
-    def predict(self, model_dir, results_dir, features_path, vid_list_file, actions_dict,
+    def predict(self, model_dir, results_dir, features_path, vid_list_file, epoch, actions_dict,
             device, sample_rate, gt_path, mapping_file):
         self.model.eval()
         with torch.no_grad():
@@ -328,7 +407,7 @@ class Trainer:
                 input_x = torch.tensor(features, dtype=torch.float)
                 input_x.unsqueeze_(0)
                 input_x = input_x.to(device)
-                predictions = self.model(input_x)
+                predictions, _ = self.model(input_x)
                 predicted = torch.sigmoid(predictions[-1]).cpu().squeeze(0)  # (num_classes, seq_len)
 
                 # 加载真实标签
@@ -391,7 +470,6 @@ class Trainer:
                 f.write(f"{mAP:.4f}\n")
                 f.write("Per-class mAP:\n")
                 f.write("Class\tmAP\n")
-                print("Class\tmAP")
                 for action in idx_to_action.values():
                     ap = per_class_ap.get(action, 0)
                     recall = per_class_recall.get(action, 0)

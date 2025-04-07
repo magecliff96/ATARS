@@ -18,6 +18,8 @@ class MS_TCN2(nn.Module):
         self.Rs = nn.ModuleList([copy.deepcopy(Refinement(num_layers_R, num_f_maps, num_classes, num_classes)) for s in range(num_R)])
 
     def forward(self, x):
+        print(x.shape)
+        exit()
         out = self.PG(x)
         outputs = out.unsqueeze(0)
         for R in self.Rs:
@@ -25,6 +27,36 @@ class MS_TCN2(nn.Module):
             outputs = torch.cat((outputs, out.unsqueeze(0)), dim=0)
 
         return outputs
+
+class CosineWaveClassifier(nn.Module):
+    def __init__(self, input_dim, hidden_dim=64):
+        super(CosineWaveClassifier, self).__init__()
+        self.mlp = nn.Sequential(
+            nn.Linear(input_dim, hidden_dim),
+            nn.ReLU(),
+            nn.Linear(hidden_dim, 3)  # A, f, phi
+        )
+        self.threshold = nn.Parameter(torch.tensor(0.5))  # learnable scalar threshold
+
+    def forward(self, x):
+        # x: (B, T, D)
+        B, T, D = x.shape
+        # Pooling to get summary of each sequence (mean over time)
+        x_pooled = x.mean(dim=1)  # (B, D)
+        # Predict wave params
+        wave_params = self.mlp(x_pooled)  # (B, 3)
+        A, f, phi = wave_params[:, 0], wave_params[:, 1], wave_params[:, 2]  # each (B,)
+        # Create time vector
+        t = torch.linspace(0, 1, T, device=x.device).unsqueeze(0).expand(B, T)  # (B, T)
+        # Compute cosine wave
+        y = A.unsqueeze(1) * torch.cos(2 * math.pi * f.unsqueeze(1) * t + phi.unsqueeze(1))  # (B, T)
+        # Apply threshold logic
+        threshold = torch.abs(self.threshold)  # ensure it's positive
+
+        out = torch.zeros_like(y)
+        out[y >= threshold] = 1.0
+        out[y <= -threshold] = -1.0
+        return out.unsqueeze(-1)  # (B, T, 1)
 
 class Prediction_Generation(nn.Module):
     def __init__(self, num_layers, num_f_maps, dim, num_classes):
@@ -297,7 +329,7 @@ class Trainer:
     #             f_ptr.write("### Frame level recognition: ###\n")
     #             f_ptr.write('\n'.join(recognition))
     #             f_ptr.close()
-    def predict(self, model_dir, results_dir, features_path, vid_list_file, actions_dict,
+    def predict(self, model_dir, results_dir, features_path, vid_list_file, epoch, actions_dict,
             device, sample_rate, gt_path, mapping_file):
         self.model.eval()
         with torch.no_grad():
@@ -332,7 +364,7 @@ class Trainer:
                 predicted = torch.sigmoid(predictions[-1]).cpu().squeeze(0)  # (num_classes, seq_len)
 
                 # 加载真实标签
-                file_ptr = open(gt_path + vid.split('.')[0] + '.txt', 'r')
+                file_ptr = open(gt_path + vid, 'r')
                 content = file_ptr.read().split('\n')[:-1]
                 file_ptr.close()
                 num_frames = min(predicted.shape[1], len(content))
@@ -391,13 +423,10 @@ class Trainer:
                 f.write(f"{mAP:.4f}\n")
                 f.write("Per-class mAP:\n")
                 f.write("Class\tmAP\n")
-                print("Class\tmAP")
                 for action in idx_to_action.values():
                     ap = per_class_ap.get(action, 0)
                     recall = per_class_recall.get(action, 0)
                     # f.write(f"{action}\t{ap:.4f}\t{recall:.4f}\n")
                     f.write(f"{action}\t{ap:.4f}\n")
-                    print(f"{action}\t{ap:.4f}")
-                print(f"mean mAP:{mAP:.4f}")
                 
 

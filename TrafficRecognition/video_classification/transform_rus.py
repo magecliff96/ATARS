@@ -160,11 +160,11 @@ class Args:
         self.video_num_subsampled = 32
         self.video_means = [0.45, 0.45, 0.45]
         self.video_stds = [0.225, 0.225, 0.225]
-        self.video_min_short_side_scale = 256*4
-        self.video_max_short_side_scale = 1024
-        self.video_crop_size = 224*4
-        self.shift_x = 64*4  # Example shift values
-        self.shift_y = -16*4
+        self.video_min_short_side_scale = 256
+        self.video_max_short_side_scale = 256
+        self.video_crop_size = 224
+        self.shift_x = 64  # Example shift values
+        self.shift_y = -16
 
 def main():
     args = Args()
