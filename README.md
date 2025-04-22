@@ -111,11 +111,11 @@ CUDA_VISIBLE_DEVICES=1 python main.py --action=predict\
 ## Citation
 If you use **ATARS** in your research, please cite our paper:
 ```bibtex
-@article{chen2024atars,
+@article{chen2025atars,
   title={ATARS: An Aerial Traffic Atomic Activity Recognition and Temporal Segmentation Dataset},
   author={Chen, Zihao and Wu, Hsuanyu and Kung, Chi-Hsi and Chen, Yi-Ting and Peng, Yan-Tsung},
-  journal={Conference on Computer Vision and Pattern Recognition (CVPR)},
-  year={2024}
+  journal={arXiv preprint arXiv:2503.18553},
+  year={2025}
 }
 ```
 
