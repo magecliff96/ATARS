@@ -15,6 +15,7 @@ class BatchGenerator(object):
         self.features_path = features_path
         self.sample_rate = sample_rate
         self.args = args
+        self.dataroot = args.dataroot
 
     def reset(self):
         self.index = 0
@@ -40,17 +41,27 @@ class BatchGenerator(object):
         for vid in batch:
             features = np.load(self.features_path + vid.split('.')[0] + '.npy')
             file_ptr = open(self.gt_path + vid.split('.')[0] + '.txt', 'r')
+            optic = np.load(self.dataroot + "/optic_dino_o/" +  vid.split('.')[0] + '.npy')
+            #light = np.loadtxt(self.dataroot + "/lights/" +  vid.split('.')[0] + '.csv', delimiter=',')
+            # if optic.shape[1] != features.shape[1]:
+            #     optic = optic.T  # maybe it's (T, 768) → transpose to (768, T)
             content = file_ptr.read().split('\n')[:-1]
             file_ptr.close()
+            
+            num_frames = min([features.shape[1], optic.shape[1], len(content)])
+            # print([features.shape[1], optic.shape[1], len(content)])
+            optic = optic[:, :num_frames]
+            features = features[:, :num_frames]
+            combined_features = np.concatenate((features, optic), axis=0)  # (C+1, T)
+
 
             # print(np.shape(features))
             # print(np.shape(content))
-            num_frames = min(np.shape(features)[1], len(content))
             classes = np.zeros((num_frames, self.num_classes))
             for i in range(num_frames):
                 labels_list = list(map(int, content[i].split()))
                 classes[i] = labels_list
-            batch_input.append(features[:, :num_frames:self.sample_rate])
+            batch_input.append(combined_features[:, :num_frames:self.sample_rate])
             batch_target.append(classes[:num_frames:self.sample_rate])
 
         length_of_sequences = [len(tgt) for tgt in batch_target]

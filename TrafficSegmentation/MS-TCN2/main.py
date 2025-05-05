@@ -21,7 +21,7 @@ parser.add_argument('--dataset', default="carom")
 parser.add_argument('--dataroot', default='/home/magecliff/Traffic_Recognition/Carom_TempSeg', type=str)
 parser.add_argument('--split', default='')
 
-parser.add_argument('--features_dim', default='2048', type=int)
+parser.add_argument('--features_dim', default='768', type=int)
 parser.add_argument('--bz', default='1', type=int)
 parser.add_argument('--lr', default='0.0005', type=float)
 
@@ -29,7 +29,7 @@ parser.add_argument('--lr', default='0.0005', type=float)
 parser.add_argument('--num_f_maps', default='64', type=int)
 
 # Need input
-parser.add_argument('--num_epochs', default=500, type=int)
+parser.add_argument('--num_epochs', default=1000, type=int)
 parser.add_argument('--num_layers_PG', type=int)
 parser.add_argument('--num_layers_R', type=int)
 parser.add_argument('--num_R', type=int)
@@ -65,7 +65,7 @@ vid_list_file_tst = args.dataroot+"/bundles/test.split.bundle"
 # david
 vid_list_file_val = args.dataroot+"/bundles/val.split.bundle"
 #
-features_path = args.dataroot+"/features/"
+features_path = args.dataroot+"/optic_dino_o/"
 gt_path = args.dataroot+"/groundTruth/"
 
 mapping_file = args.dataroot+"/mapping.txt"

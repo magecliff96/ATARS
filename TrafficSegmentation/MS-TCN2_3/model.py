@@ -8,6 +8,7 @@ from torch import optim
 import copy
 import numpy as np
 from loguru import logger
+import math
 
 from sklearn.metrics import average_precision_score
 
@@ -17,16 +18,15 @@ class MS_TCN2(nn.Module):
         self.PG = Prediction_Generation(num_layers_PG, num_f_maps, dim, num_classes)
         self.Rs = nn.ModuleList([copy.deepcopy(Refinement(num_layers_R, num_f_maps, num_classes, num_classes)) for s in range(num_R)])
 
-    def forward(self, x):
-        print(x.shape)
-        exit()
+    def forward(self, x): # x => [b, d, t]
         out = self.PG(x)
         outputs = out.unsqueeze(0)
         for R in self.Rs:
             out = R(out)
             outputs = torch.cat((outputs, out.unsqueeze(0)), dim=0)
-
         return outputs
+    
+
 
 
 class Prediction_Generation(nn.Module):
@@ -35,7 +35,7 @@ class Prediction_Generation(nn.Module):
 
         self.num_layers = num_layers
 
-        self.conv_1x1_in = nn.Conv1d(dim, num_f_maps, 1)
+        self.conv_1x1_in = nn.Conv1d(dim+768, num_f_maps, 1)#edited +768 bc cos features
 
         self.conv_dilated_1 = nn.ModuleList((
             nn.Conv1d(num_f_maps, num_f_maps, 3, padding=2**(num_layers-1-i), dilation=2**(num_layers-1-i))
@@ -114,6 +114,13 @@ class Trainer:
         # david
         self.best_val_mAP = 0
         #
+        self.class_names = [
+            '12v', '12v+', '13v', '13v+', '14v', '14v+', '21v', '21v+', 
+            '23v', '23v+', '24v', '24v+', '31v', '31v+', '32v', '32v+', 
+            '34v', '34v+', '41v', '41v+', '42v', '42v+', '43v', '43v+', 
+            '12p', '14p', '21p', '23p', '32p', '34p', '41p', '43p'
+        ]
+
 
         #logger.add('logs/' + dataset + "_" + split + "_{time}.log")
         log_filename = f'logs/bz_{args.bz}_lr_{args.lr}_epoch_{args.num_epochs}_bceposweight_{args.bce_pos_weight}.log'
@@ -167,6 +174,7 @@ class Trainer:
                     # 累加有效位置的损失
                     loss += bce_loss.sum()
                     
+
                     # 累加有效元素的数量
                     total_valid_elements += mask_flat.sum().item()
 
@@ -266,42 +274,9 @@ class Trainer:
 
         self.model.train()
         return mAP
-    #
 
-    # def predict(self, model_dir, results_dir, features_path, vid_list_file, epoch, actions_dict, device, sample_rate):
-    #     self.model.eval()
-    #     with torch.no_grad():
-    #         self.model.to(device)
-    #         self.model.load_state_dict(torch.load(model_dir + "/epoch-" + str(epoch) + ".model"))
-    #         file_ptr = open(vid_list_file, 'r')
-    #         list_of_vids = file_ptr.read().split('\n')[:-1]
-    #         file_ptr.close()
-    #         idx_to_action = {v: k for k, v in actions_dict.items()}
-    #         for vid in list_of_vids:
-    #             features = np.load(features_path + vid.split('.')[0] + '.npy')
-    #             features = features[:, ::sample_rate]
-    #             input_x = torch.tensor(features, dtype=torch.float)
-    #             input_x.unsqueeze_(0)
-    #             input_x = input_x.to(device)
-    #             predictions = self.model(input_x)
-    #             predicted = (torch.sigmoid(predictions[-1]) > 0.5).float()
-    #             predicted = predicted.squeeze(0)  # Remove batch dimension
-
-    #             recognition = []
-    #             for t in range(predicted.shape[1]):
-    #                 frame_labels = []
-    #                 for c in range(self.num_classes):
-    #                     if predicted[c, t] == 1:
-    #                         frame_labels.append(idx_to_action[c])
-    #                 recognition.append(' '.join(frame_labels))
-
-    #             f_name = vid.split('/')[-1].split('.')[0]
-    #             f_ptr = open(results_dir + "/" + f_name, "w")
-    #             f_ptr.write("### Frame level recognition: ###\n")
-    #             f_ptr.write('\n'.join(recognition))
-    #             f_ptr.close()
     def predict(self, model_dir, results_dir, features_path, vid_list_file, epoch, actions_dict,
-            device, sample_rate, gt_path, mapping_file):
+            device, sample_rate, gt_path, mapping_file, args):
         self.model.eval()
         with torch.no_grad():
             self.model.to(device)
@@ -327,18 +302,25 @@ class Trainer:
             for vid in list_of_vids:
                 # 加载特征
                 features = np.load(features_path + vid.split('.')[0] + '.npy')
-                features = features[:, ::sample_rate]
-                input_x = torch.tensor(features, dtype=torch.float)
+                optic = np.load(self.dataroot + "/optic_dino_o/" +  vid.split('.')[0] + '.npy')
+                file_ptr = open(gt_path + vid.split('.')[0] + '.txt', 'r')
+                content = file_ptr.read().split('\n')[:-1]
+                file_ptr.close()
+                # if optic.shape[1] != features.shape[1]:
+                #     optic = optic.T  # maybe it's (T, 768) → transpose to (768, T)
+
+                num_frames = min([features.shape[1], optic.shape[1], len(content)])
+                features = features[:, :num_frames]
+                optic = optic[:, :num_frames]
+                combined_features = np.concatenate((features, optic), axis=0)  # (C+768, T)
+
+                input_x = torch.tensor(combined_features, dtype=torch.float)
                 input_x.unsqueeze_(0)
                 input_x = input_x.to(device)
                 predictions = self.model(input_x)
                 predicted = torch.sigmoid(predictions[-1]).cpu().squeeze(0)  # (num_classes, seq_len)
 
-                # 加载真实标签
-                file_ptr = open(gt_path + vid, 'r')
-                content = file_ptr.read().split('\n')[:-1]
-                file_ptr.close()
-                num_frames = min(predicted.shape[1], len(content))
+
                 gt_labels = np.zeros((self.num_classes, num_frames))
                 for t in range(num_frames):
                     labels_list = list(map(int, content[t].split()))
@@ -399,5 +381,7 @@ class Trainer:
                     recall = per_class_recall.get(action, 0)
                     # f.write(f"{action}\t{ap:.4f}\t{recall:.4f}\n")
                     f.write(f"{action}\t{ap:.4f}\n")
+                    print(f"{action}\t{ap:.4f}")
+                print(f"mean mAP:{mAP:.4f}")
                 
 

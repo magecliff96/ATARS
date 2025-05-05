@@ -9,7 +9,6 @@ import copy
 import numpy as np
 from loguru import logger
 import math
-import os
 
 from sklearn.metrics import average_precision_score
 
@@ -18,72 +17,16 @@ class MS_TCN2(nn.Module):
         super(MS_TCN2, self).__init__()
         self.PG = Prediction_Generation(num_layers_PG, num_f_maps, dim, num_classes)
         self.Rs = nn.ModuleList([copy.deepcopy(Refinement(num_layers_R, num_f_maps, num_classes, num_classes)) for s in range(num_R)])
-        self.cosine_cls = CosineWaveClassifier(input_dim=dim)
 
     def forward(self, x): # x => [b, d, t]
-        cos_sig, cos_out = self.cosine_cls(x)  # make it (B, D, T) => (B, 1, T)
-        x = torch.cat([x, cos_sig], dim=1)
         out = self.PG(x)
         outputs = out.unsqueeze(0)
         for R in self.Rs:
             out = R(out)
             outputs = torch.cat((outputs, out.unsqueeze(0)), dim=0)
-        return outputs, cos_out
+        return outputs
     
 
-class CosineWaveClassifier(nn.Module):
-    def __init__(self, input_dim, hidden_dim=64):
-        super(CosineWaveClassifier, self).__init__()
-        # temporal encoder: light 1D conv to extract temporal variation
-        self.temporal_encoder = nn.Sequential(
-            nn.Conv1d(input_dim, hidden_dim, kernel_size=3, padding=1),
-            nn.ReLU(),
-            nn.Conv1d(hidden_dim, hidden_dim, kernel_size=3, padding=1),
-            nn.ReLU(),
-            nn.Conv1d(hidden_dim, hidden_dim, kernel_size=3, padding=1),
-            nn.ReLU(),
-            nn.Conv1d(hidden_dim, hidden_dim, kernel_size=3, padding=1),
-            nn.ReLU()
-        )
-        # global pooling to estimate global wave parameters
-        self.param_head = nn.Sequential(
-            nn.AdaptiveAvgPool1d(1),          # (B, H, 1)
-            nn.Flatten(),                     # (B, H)
-            nn.Linear(hidden_dim, 3)          # output: amplitude, frequency, phase
-        )
-        self.threshold = 0.5  # learnable global threshold
-        # self.class_head = nn.Conv1d(1, 3, kernel_size=1)
-
-
-
-    def forward(self, x):
-        # Temporal feature extraction
-        feat = self.temporal_encoder(x)  # (B, hidden_dim, T)
-        # Predict cosine parameters from full sequence (global)
-        wave_params = self.param_head(feat)  # (B, 3)
-        A, f, phi = wave_params[:, 0], wave_params[:, 1], wave_params[:, 2]  # (B,)
-        # Generate cosine signal over time
-        B, _, T = feat.shape
-        t = torch.linspace(0, 1, T, device=x.device).unsqueeze(0).expand(B, T)  # (B, T)
-        y = A.unsqueeze(1) * torch.cos(2 * math.pi * f.unsqueeze(1) * t + phi.unsqueeze(1))  # (B, T)
-        # Apply threshold
-        # y_out = y * torch.where(torch.abs(y) >= self.threshold, 1.0, 0.1)
-        # pos_gate = torch.sigmoid(y_out - self.threshold)
-        # neg_gate = torch.sigmoid(-(y_out + self.threshold))
-        # cos_out = pos_gate - neg_gate  # (B, T)
-        y_out_expanded = y.unsqueeze(1)
-
-        # Classification over y_out
-        upper_mask = torch.sigmoid((y - A.unsqueeze(1) / 2) * 1 )  # Class 1
-        lower_mask = torch.sigmoid((-y - A.unsqueeze(1) / 2) * 1 )  # Class -1
-        mid_mask = 1.0 - upper_mask - lower_mask  # Class 0
-
-        # Stack into class logits
-        cos_label = torch.stack([lower_mask, mid_mask, upper_mask], dim=1)
-        cos_out = [cos_label, f]
-
-
-        return y_out_expanded, cos_out  # y_out & cos_out = (B, 1, T)
 
 
 class Prediction_Generation(nn.Module):
@@ -92,7 +35,7 @@ class Prediction_Generation(nn.Module):
 
         self.num_layers = num_layers
 
-        self.conv_1x1_in = nn.Conv1d(dim+1, num_f_maps, 1)#edited +1 bc cos features
+        self.conv_1x1_in = nn.Conv1d(dim+768, num_f_maps, 1)#edited +768 bc cos features
 
         self.conv_dilated_1 = nn.ModuleList((
             nn.Conv1d(num_f_maps, num_f_maps, 3, padding=2**(num_layers-1-i), dilation=2**(num_layers-1-i))
@@ -166,9 +109,6 @@ class Trainer:
         pos_weight = torch.ones([self.num_classes], device=device)*args.bce_pos_weight
         self.bce = nn.BCEWithLogitsLoss(reduction='sum', pos_weight=pos_weight)
         self.mse = nn.MSELoss(reduction='none')
-        self.ce_loss = nn.CrossEntropyLoss(weight=torch.tensor([2.0, 1.0, 2.0], device=device))
-
-
         #
 
         # david
@@ -189,40 +129,11 @@ class Trainer:
         logger.add(sys.stdout, colorize=True, format="{message}")
 
     def train(self, save_dir, batch_gen, batch_gen_val, num_epochs, batch_size, learning_rate, device):
-
-        #edited 
-        def smooth_sequence(seq, window_size=3):
-            """
-            Majority filter: smooth class sequence to reduce noise.
-            """
-            T = seq.size(0)
-            pad = window_size // 2
-            padded = F.pad(seq.unsqueeze(0).unsqueeze(0).float(), (pad, pad), mode='replicate').squeeze()
-            smoothed = []
-            for t in range(T):
-                window = padded[t:t + window_size].tolist()
-                counts = [window.count(0), window.count(1), window.count(2)]
-                smoothed.append(int(torch.tensor(counts).argmax()))
-            return torch.tensor(smoothed, device=seq.device)
-
-        def estimate_frequency_robust(smoothed, class_map=(-1, 0, 1)):
-            """
-            Estimate frequency from a class sequence with noise smoothing.
-            """
-            mapped = torch.tensor(class_map, device=smoothed.device)[smoothed]  # {-1, 0, 1}
-            signs = mapped.sign()
-            transitions = (signs[1:] * signs[:-1] == -1)  # sign flip: +1→-1 or -1→+1
-            num_half_cycles = transitions.sum().item()
-            num_full_cycles = num_half_cycles // 2
-            frequency = num_full_cycles / len(mapped)
-            return frequency
-        #edited
-
         self.model.train()
         self.model.to(device)
         optimizer = optim.Adam(self.model.parameters(), lr=learning_rate)
         for epoch in range(num_epochs):
-            epoch_loss = 0; epoch_cosLoss = 0
+            epoch_loss = 0
             total_valid_elements = 0
             # 初始化用于存储每个类别的预测值和真实标签的字典
             per_class_true = {c: [] for c in range(self.num_classes)}
@@ -231,12 +142,12 @@ class Trainer:
                 batch_input, batch_target, mask = batch_gen.next_batch(batch_size)
                 batch_input, batch_target, mask = batch_input.to(device), batch_target.to(device), mask.to(device)
                 optimizer.zero_grad()
-                predictions, cos_out = self.model(batch_input)
+                predictions = self.model(batch_input)
 
                 # print(f"mask shape: {mask.shape}")
                 # print(f"batch target shape: {batch_target.shape}")
 
-                loss = 0; cosLoss_sum = 0
+                loss = 0
                 for p in predictions:
                     # 1. 计算时间平滑的 MSE 损失
                     log_probs_current = F.logsigmoid(p[:, :, 1:])  # 当前时间步的对数概率
@@ -247,6 +158,7 @@ class Trainer:
                     clamped_mse = torch.clamp(mse_loss, min=0, max=16)
                     masked_mse = clamped_mse * mask[:, :, 1:]  # 应用掩码
                     mean_mse_loss = torch.mean(masked_mse)
+                    loss += 0.15 * mean_mse_loss  # 将损失缩放并添加到总损失中
 
                     # 2. 计算主要的 BCE 损失
                     p_flat = p.permute(0, 2, 1).reshape(-1, self.num_classes)  # (batch_size * seq_len, num_classes)
@@ -260,97 +172,17 @@ class Trainer:
                     bce_loss = bce_loss * mask_flat  # 掩码形状：[N, num_classes]
                     
                     # 累加有效位置的损失
+                    loss += bce_loss.sum()
                     
-                    
-                    #edited
-                    #regular loss
-                    positive_classes = ['24v', '24v+', '42v', '42v+']
-                    negative_classes = ['31v', '31v+', '13v', '13v+']
-                    class_indices = {name: i for i, name in enumerate(self.class_names)}
-
-                    # Get indices for positive and negative class groups
-                    pos_indices = torch.tensor([class_indices[name] for name in positive_classes], device=batch_target.device)
-                    neg_indices = torch.tensor([class_indices[name] for name in negative_classes], device=batch_target.device)
-
-                    # Create masks: shape (B, T)
-                    pos_mask = batch_target[:, pos_indices, :].any(dim=1)  # (B, T)
-                    neg_mask = batch_target[:, neg_indices, :].any(dim=1)  # (B, T)
-
-                    # Initialize classification ground truth: default to class 1 (neutral)
-                    cos_gt_class = torch.ones(batch_target.shape[0], batch_target.shape[2], dtype=torch.long, device=batch_target.device)  # (B, T)
-
-                    # Apply positive and negative class assignments
-                    cos_gt_class[pos_mask] = 2  # positive class
-                    cos_gt_class[neg_mask] = 0  # negative class
-
-                    # Smooth it per sample
-                    cos_gt_class_s = torch.empty_like(cos_gt_class)
-                    for b in range(cos_gt_class.size(0)):
-                        cos_gt_class_s[b] = smooth_sequence(cos_gt_class[b], window_size=3)
-
-                    # Use smoothed labels for classification loss
-                    coslabel_loss = self.ce_loss(cos_out[0], cos_gt_class_s)
-                    # Compute softmax cross-entropy loss
-
-
-                    ######### Estimate frequency for each sample in the batch
-                    estimated_frequencies = []
-                    for b in range(cos_gt_class_s.size(0)):
-                        freq = estimate_frequency_robust(cos_gt_class_s[b])
-                        estimated_frequencies.append(freq)
-
-                    # Now `estimated_frequencies` is a list of length B
-                    # You can log, analyze, or average these
-                    gt_freq = torch.tensor(estimated_frequencies, device=cos_out[1].device).float()  # (B,)
-
-                    cos_freq_loss = self.mse(cos_out[1], gt_freq)
-
-                    ########## Add to total loss
-                    cos_loss = coslabel_loss.mean() + 10 * cos_freq_loss.mean()
-                    loss += 10 * cos_loss
-                    cosLoss_sum += cos_loss
-
-
-                    ###########recoding cos prediction
-                    os.makedirs('cos_res', exist_ok=True)
-                    probabilities = cos_out[0].detach().cpu()  # (B, 3, T)
-
-                    # Detach predictions and ground truth
-                    pred_classes = torch.argmax(probabilities, dim=1)  # (B, T)
-                    gt_classes = cos_gt_class_s.detach().cpu()  # (B, T)
-
-                    # Convert to -1, 0, 1
-                    index_to_centered = torch.tensor([-1, 0, 1])
-                    pred_centered = index_to_centered[pred_classes]
-                    gt_centered = index_to_centered[gt_classes]
-
-                    ######## Define file path in results folder
-                    output_path = os.path.join('cos_res', f'cosine_output_epoch_{epoch}.txt')
-                    with open(output_path, 'a') as f:
-                        for b in range(probabilities.shape[0]):
-                            if b % 25 == 0:
-                                f.write(f"Sample {b}:\n")
-                                pred_str = ' '.join(f"{v:.1f}" for v in pred_centered[b])
-                                gt_str = ' '.join(f"{v:.1f}" for v in gt_centered[b])
-                                f.write(f"  Pred: {pred_str}\n")
-                                f.write(f"  GT  : {gt_str}\n")
-                    #recording cos_predction
-                    if epoch > 20:
-                        loss += 0.15 * mean_mse_loss
-                        loss += bce_loss.mean()
-                    #edited
 
                     # 累加有效元素的数量
                     total_valid_elements += mask_flat.sum().item()
-
-                # print(f"last cosLoss: {cos_loss}")
 
                 loss.backward()
                 optimizer.step()
 
                 # 计算损失
                 epoch_loss += loss.item()
-                epoch_cosLoss += cosLoss_sum.item()
                 total_valid_elements += mask_flat.sum().item()
 
                 # 收集预测值、真实标签和掩码
@@ -359,7 +191,7 @@ class Trainer:
                 mask_cpu = mask.detach().cpu()
 
                 # 对每个类别收集有效的预测值和真实标签
-                batch_size,_ ,_ = predicted.shape
+                batch_size, num_classes, seq_len = predicted.shape
                 for i in range(batch_size):
                     seq_len_i = int(mask_cpu[i, 0, :].sum().item())
                     for c in range(self.num_classes):
@@ -369,17 +201,10 @@ class Trainer:
                             per_class_true[c].extend(y_true.tolist())
                             per_class_scores[c].extend(y_scores.tolist())
 
+
+
             average_epoch_loss = epoch_loss / total_valid_elements if total_valid_elements > 0 else 0
-
-            #edited
-            # if epoch ==50:
-            #     # for param in self.model.cosine_cls.parameters():
-            #     #     param.requires_grad = False
-            #     for name, param in self.model.cosine_cls.named_parameters():
-            #         if param.grad is not None:
-            #             param.grad *= 0.01  # or any small scaling factor
-            #edited
-
+            
             # 在 epoch 结束后计算 mAP
             per_class_ap = []
             for c in range(self.num_classes):
@@ -394,8 +219,8 @@ class Trainer:
             # david
             # 计算验证集的 mAP
             val_mAP = self.validate(batch_gen_val, device)
-            logger.info("[epoch %d]: training loss = %f, training mAP = %f, validation mAP = %f, cos loss = %f" % (
-                        epoch + 1, average_epoch_loss, mAP, val_mAP, epoch_cosLoss))
+            logger.info("[epoch %d]: training loss = %f, training mAP = %f, validation mAP = %f" % (
+                        epoch + 1, average_epoch_loss, mAP, val_mAP))
             
             # 检查当前的 val_mAP 是否是最好的
             if val_mAP > self.best_val_mAP:
@@ -411,10 +236,7 @@ class Trainer:
             # torch.save(optimizer.state_dict(), save_dir + "/epoch-" + str(epoch + 1) + ".opt")
             # logger.info("[epoch %d]: epoch loss = %f,   mAP = %f" % (
             #     epoch + 1, epoch_loss / len(batch_gen.list_of_examples), mAP))
-
-
-
-
+        
     def validate(self, batch_gen, device):
         self.model.eval()
         per_class_true = {c: [] for c in range(self.num_classes)}
@@ -423,7 +245,7 @@ class Trainer:
             while batch_gen.has_next():
                 batch_input, batch_target, mask = batch_gen.next_batch(1)
                 batch_input, batch_target, mask = batch_input.to(device), batch_target.to(device), mask.to(device)
-                predictions, _ = self.model(batch_input)
+                predictions = self.model(batch_input)
 
                 # 收集预测值、真实标签和掩码
                 predicted = torch.sigmoid(predictions[-1]).cpu()
@@ -452,42 +274,9 @@ class Trainer:
 
         self.model.train()
         return mAP
-    #
 
-    # def predict(self, model_dir, results_dir, features_path, vid_list_file, epoch, actions_dict, device, sample_rate):
-    #     self.model.eval()
-    #     with torch.no_grad():
-    #         self.model.to(device)
-    #         self.model.load_state_dict(torch.load(model_dir + "/epoch-" + str(epoch) + ".model"))
-    #         file_ptr = open(vid_list_file, 'r')
-    #         list_of_vids = file_ptr.read().split('\n')[:-1]
-    #         file_ptr.close()
-    #         idx_to_action = {v: k for k, v in actions_dict.items()}
-    #         for vid in list_of_vids:
-    #             features = np.load(features_path + vid.split('.')[0] + '.npy')
-    #             features = features[:, ::sample_rate]
-    #             input_x = torch.tensor(features, dtype=torch.float)
-    #             input_x.unsqueeze_(0)
-    #             input_x = input_x.to(device)
-    #             predictions = self.model(input_x)
-    #             predicted = (torch.sigmoid(predictions[-1]) > 0.5).float()
-    #             predicted = predicted.squeeze(0)  # Remove batch dimension
-
-    #             recognition = []
-    #             for t in range(predicted.shape[1]):
-    #                 frame_labels = []
-    #                 for c in range(self.num_classes):
-    #                     if predicted[c, t] == 1:
-    #                         frame_labels.append(idx_to_action[c])
-    #                 recognition.append(' '.join(frame_labels))
-
-    #             f_name = vid.split('/')[-1].split('.')[0]
-    #             f_ptr = open(results_dir + "/" + f_name, "w")
-    #             f_ptr.write("### Frame level recognition: ###\n")
-    #             f_ptr.write('\n'.join(recognition))
-    #             f_ptr.close()
     def predict(self, model_dir, results_dir, features_path, vid_list_file, epoch, actions_dict,
-            device, sample_rate, gt_path, mapping_file):
+            device, sample_rate, gt_path, mapping_file, args):
         self.model.eval()
         with torch.no_grad():
             self.model.to(device)
@@ -513,18 +302,25 @@ class Trainer:
             for vid in list_of_vids:
                 # 加载特征
                 features = np.load(features_path + vid.split('.')[0] + '.npy')
-                features = features[:, ::sample_rate]
-                input_x = torch.tensor(features, dtype=torch.float)
-                input_x.unsqueeze_(0)
-                input_x = input_x.to(device)
-                predictions, _ = self.model(input_x)
-                predicted = torch.sigmoid(predictions[-1]).cpu().squeeze(0)  # (num_classes, seq_len)
-
-                # 加载真实标签
+                optic = np.load(self.dataroot + "/optic_dino_o/" +  vid.split('.')[0] + '.npy')
                 file_ptr = open(gt_path + vid.split('.')[0] + '.txt', 'r')
                 content = file_ptr.read().split('\n')[:-1]
                 file_ptr.close()
-                num_frames = min(predicted.shape[1], len(content))
+                # if optic.shape[1] != features.shape[1]:
+                #     optic = optic.T  # maybe it's (T, 768) → transpose to (768, T)
+
+                num_frames = min([features.shape[1], optic.shape[1], len(content)])
+                features = features[:, :num_frames]
+                optic = optic[:, :num_frames]
+                combined_features = np.concatenate((features, optic), axis=0)  # (C+768, T)
+
+                input_x = torch.tensor(combined_features, dtype=torch.float)
+                input_x.unsqueeze_(0)
+                input_x = input_x.to(device)
+                predictions = self.model(input_x)
+                predicted = torch.sigmoid(predictions[-1]).cpu().squeeze(0)  # (num_classes, seq_len)
+
+
                 gt_labels = np.zeros((self.num_classes, num_frames))
                 for t in range(num_frames):
                     labels_list = list(map(int, content[t].split()))

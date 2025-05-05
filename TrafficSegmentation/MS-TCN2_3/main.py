@@ -29,7 +29,7 @@ parser.add_argument('--lr', default='0.0005', type=float)
 parser.add_argument('--num_f_maps', default='64', type=int)
 
 # Need input
-parser.add_argument('--num_epochs', default=500, type=int)
+parser.add_argument('--num_epochs', default=1000, type=int)
 parser.add_argument('--num_layers_PG', type=int)
 parser.add_argument('--num_layers_R', type=int)
 parser.add_argument('--num_R', type=int)
@@ -65,7 +65,7 @@ vid_list_file_tst = args.dataroot+"/bundles/test.split.bundle"
 # david
 vid_list_file_val = args.dataroot+"/bundles/val.split.bundle"
 #
-features_path = args.dataroot+"/features/"
+features_path = args.dataroot+"/features_o/"
 gt_path = args.dataroot+"/groundTruth/"
 
 mapping_file = args.dataroot+"/mapping.txt"
@@ -101,5 +101,5 @@ if args.action == "train":
 
 if args.action == "predict":
     #trainer.predict(model_dir, results_dir, features_path, vid_list_file_tst, num_epochs, actions_dict, device, sample_rate)
-    trainer.predict(model_dir, results_dir, features_path, vid_list_file_tst,
-                    actions_dict, device, sample_rate, gt_path, mapping_file)
+    trainer.predict(model_dir, results_dir, features_path, vid_list_file_tst, num_epochs,
+                    actions_dict, device, sample_rate, gt_path, mapping_file, args)
