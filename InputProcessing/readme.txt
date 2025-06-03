@@ -1,1 +1,0 @@
-Use transform_rus to subsample video data
