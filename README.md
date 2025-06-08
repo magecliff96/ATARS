@@ -59,6 +59,8 @@ For Temporal AA Segmentation, the dataset should be installed inside TrafficSegm
 
 TrafficRecognition/video_classification/transform_rus.py is used to resize and prepate the videos.
 
+Some files/labels may not be currently publically available. If anything you need is not currently available on this github, feel free to contact me at magecliff96@gmail.com.
+
 ## Training AA Recognition Model
 To train various model for multi-label **atomic activity recognition**, first preprocess video clips using transform_rus.py in TrafficRecognition/video_classification folder.
 Then execute below at your TrafficRecognition/video_classification folder:
