@@ -121,9 +121,6 @@ If you use **ATARS** in your research, please cite our paper:
 }
 ```
 
-## License
-This project is licensed under the **MIT License**.
-
 ---
 For more details, visit our **[GitHub repository](https://github.com/magecliff96/ATARS)** or refer to our **ATARS dataset paper**.
 
